@@ -1,0 +1,5 @@
+C:\Users\mjsku_000\Desktop\RimWorld857Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\ExtendedStorage.dll
+C:\Users\mjsku_000\Desktop\RimWorld857Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\ExtendedStorage.pdb
+C:\Users\mjsku_000\Desktop\RimWorld857Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.csprojResolveAssemblyReference.cache
+C:\Users\mjsku_000\Desktop\RimWorld857Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.dll
+C:\Users\mjsku_000\Desktop\RimWorld857Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.pdb

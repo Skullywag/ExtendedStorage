@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>ExtendedStorage</name>
+	<author>Skullywag</author>
+	<targetVersion>Alpha 11</targetVersion>
+	<description>Adds additional storage buildings that multi stack items.</description>
+</ModMetaData>

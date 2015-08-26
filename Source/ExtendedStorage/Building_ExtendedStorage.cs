@@ -156,7 +156,7 @@ namespace ExtendedStorage
                 if (storedThingDef == null) return 0;
                 if (storedThingDef.stuffProps != null)
                 {
-                    return (int)(maxStorage / storedThingDef.stuffProps.VolumePerUnit);
+                    return (int)(maxStorage / storedThingDef.VolumePerUnit);
                 }
                 return maxStorage;
             }

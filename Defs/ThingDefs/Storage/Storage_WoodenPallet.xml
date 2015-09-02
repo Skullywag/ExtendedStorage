@@ -16,15 +16,16 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
     <defName>Storage_WoodenPallet</defName>
     <label>Wooden Pallet</label>
-    <thingClass>Building_Storage</thingClass>
+    <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/WoodenPallet</texPath>
+      <texPath>Things/Building/Furniture/WoodenPalletSmall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,3</drawsize>
+      <drawsize>2,1</drawsize>
     </graphicData>
+    <maxStorage>300</maxStorage>
     <altitudeLayer>Waist</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
@@ -35,7 +36,7 @@
       <Beauty>-2</Beauty>
     </statBases>
     <description>Haulers carry materials here for storage.</description>
-    <size>(2,3)</size>
+    <size>(2,1)</size>
     <stuffCategories>
       <li>Woody</li>
     </stuffCategories>
@@ -51,12 +52,16 @@
           <categories>
             <li>ResourcesRaw</li>
           </categories>
+          <thingDefs>
+            <li>ArtilleryShell</li>
+          </thingDefs>
         </filter>
       </fixedStorageSettings>
     </building>
     <inspectorTabs>
       <li>ITab_Storage</li>
     </inspectorTabs>
+    <tickerType>Normal</tickerType>
     <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>

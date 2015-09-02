@@ -2,170 +2,174 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using UnityEngine;
 using Verse;
-
 namespace ExtendedStorage
 {
     public class Building_ExtendedStorage : Building_Storage
     {
-        private IntVec3 inputSlot, outputSlot;
+        private IntVec3 inputSlot;
+        private IntVec3 outputSlot;
         private int maxStorage = 1000;
-        private ThingDef storedThingDef = null;
-
+        private ThingDef storedThingDef;
+        public Thing StoredThingAtInput
+        {
+            get
+            {
+                if (this.storedThingDef != null)
+                {
+                    List<Thing> list = (
+                        from t in Find.ThingGrid.ThingsAt(this.inputSlot)
+                        where t.def == this.storedThingDef
+                        select t).ToList<Thing>();
+                    if (list.Count <= 0)
+                    {
+                        return null;
+                    }
+                    return list.First<Thing>();
+                }
+                else
+                {
+                    List<Thing> list2 = (
+                        from t in Find.ThingGrid.ThingsAt(this.inputSlot)
+                        where this.slotGroup.Settings.AllowedToAccept(t)
+                        select t).ToList<Thing>();
+                    if (list2.Count <= 0)
+                    {
+                        return null;
+                    }
+                    return list2.First<Thing>();
+                }
+            }
+        }
+        public Thing StoredThing
+        {
+            get
+            {
+                if (this.storedThingDef == null)
+                {
+                    return null;
+                }
+                List<Thing> list = (
+                    from t in Find.ThingGrid.ThingsListAt(this.outputSlot)
+                    where t.def == this.storedThingDef
+                    select t).ToList<Thing>();
+                if (list.Count <= 0)
+                {
+                    return null;
+                }
+                return list.First<Thing>();
+            }
+        }
+        public bool StorageFull
+        {
+            get
+            {
+                return this.storedThingDef != null && this.StoredThing != null && this.StoredThing.stackCount >= this.ApparentMaxStorage;
+            }
+        }
+        public int ApparentMaxStorage
+        {
+            get
+            {
+                if (this.storedThingDef == null)
+                {
+                    return 0;
+                }
+                if (this.storedThingDef.smallVolume)
+                {
+                    return (int)((float)this.maxStorage / 0.2f);
+                }
+                return this.maxStorage;
+            }
+        }
         public override void SpawnSetup()
         {
             base.SpawnSetup();
-            maxStorage = ((ESdef)def).maxStorage;
-            List<IntVec3> cells = GenAdj.CellsOccupiedBy(this).ToList();
-            inputSlot = cells[0];
-            outputSlot = cells[1];
+            this.maxStorage = ((ESdef)this.def).maxStorage;
+            List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList<IntVec3>();
+            this.inputSlot = list[0];
+            this.outputSlot = list[1];
         }
-
         public override void Tick()
         {
             base.Tick();
             if (Find.TickManager.TicksGame % 10 == 0)
             {
-                SlotGroup slotGroup = inputSlot.GetSlotGroup();
-                CheckOutputSlot();
-                if (!StorageFull)
+                this.CheckOutputSlot();
+                if (!this.StorageFull)
                 {
-                    TryMoveItem();
+                    this.TryMoveItem();
                 }
             }
         }
-
         private void CheckOutputSlot()
         {
-            if (storedThingDef == null) return;
-            if (StoredThing == null)
+            if (this.storedThingDef == null)
             {
-                storedThingDef = null;
                 return;
             }
-            List<Thing> things = (
-                from t in Find.ThingGrid.ThingsAt(outputSlot)
-                where t.def == storedThingDef
-                orderby t.stackCount
-                select t).ToList();
-            if (things.Count > 1)
+            if (this.StoredThing == null)
             {
-                Thing thing = ThingMaker.MakeThing(storedThingDef, things.First().Stuff);
-                foreach (var current in things)
+                this.storedThingDef = null;
+                return;
+            }
+            List<Thing> list = (
+                from t in Find.ThingGrid.ThingsAt(this.outputSlot)
+                where t.def == this.storedThingDef
+                orderby t.stackCount
+                select t).ToList<Thing>();
+            if (list.Count > 1)
+            {
+                Thing thing = ThingMaker.MakeThing(this.storedThingDef, list.First<Thing>().Stuff);
+                foreach (Thing current in list)
                 {
                     thing.stackCount += current.stackCount;
-                    current.Destroy(DestroyMode.Vanish);
+                    current.Destroy(0);
                 }
-                GenSpawn.Spawn(thing, outputSlot);
+                GenSpawn.Spawn(thing, this.outputSlot);
             }
         }
-
         private void TryMoveItem()
         {
-            if (storedThingDef == null)
+            if (this.storedThingDef == null)
             {
-                Thing thing = StoredThingAtInput;
-                if (thing != null)
+                Thing storedThingAtInput = this.StoredThingAtInput;
+                if (storedThingAtInput != null)
                 {
-                    storedThingDef = thing.def;
-                    Thing thing2 = ThingMaker.MakeThing(storedThingDef, thing.Stuff);
-                    thing2.stackCount = thing.stackCount;
-                    thing.Destroy(DestroyMode.Vanish);
-                    GenSpawn.Spawn(thing2, outputSlot);
+                    this.storedThingDef = storedThingAtInput.def;
+                    Thing thing = ThingMaker.MakeThing(this.storedThingDef, storedThingAtInput.Stuff);
+                    thing.stackCount = storedThingAtInput.stackCount;
+                    storedThingAtInput.Destroy(0);
+                    GenSpawn.Spawn(thing, this.outputSlot);
                 }
                 return;
             }
-            else
+            Thing storedThingAtInput2 = this.StoredThingAtInput;
+            Thing storedThing = this.StoredThing;
+            if (storedThingAtInput2 != null)
             {
-                //TODO check for remaining storage space and only take the remaining amount
-                Thing thing = StoredThingAtInput;
-                Thing storedThing = StoredThing;
-                if (thing != null)
+                if (storedThing != null)
                 {
-                    if (storedThing != null)
+                    int a = this.ApparentMaxStorage - storedThing.stackCount;
+                    int num = Mathf.Min(a, storedThingAtInput2.stackCount);
+                    storedThing.stackCount += num;
+                    storedThingAtInput2.stackCount -= num;
+                    if (storedThingAtInput2.stackCount <= 0)
                     {
-                        int remaining = ApparentMaxStorage - storedThing.stackCount;
-                        int num = UnityEngine.Mathf.Min(remaining, thing.stackCount);
-                        storedThing.stackCount += num;
-                        thing.stackCount -= num;
-                        if (thing.stackCount <= 0)
-                            thing.Destroy(DestroyMode.Vanish);
-                        return;
+                        storedThingAtInput2.Destroy(0);
                     }
-                    Thing thing2 = ThingMaker.MakeThing(thing.def, thing.Stuff);
-                    GenSpawn.Spawn(thing2, outputSlot);
-                    thing.Destroy(DestroyMode.Vanish);
+                    return;
                 }
+                Thing thing2 = ThingMaker.MakeThing(storedThingAtInput2.def, storedThingAtInput2.Stuff);
+                GenSpawn.Spawn(thing2, this.outputSlot);
+                storedThingAtInput2.Destroy(0);
             }
         }
-
-        public Thing StoredThingAtInput
-        {
-            get
-            {
-                if (storedThingDef != null)
-                {
-                    List<Thing> things = (
-                        from t in Find.ThingGrid.ThingsAt(inputSlot)
-                        where t.def == storedThingDef
-                        select t).ToList();
-                    return things.Count > 0 ? things.First() : null;
-                }
-                else
-                {
-                    List<Thing> things = (
-                        from t in Find.ThingGrid.ThingsAt(inputSlot)
-                        where slotGroup.Settings.AllowedToAccept(t)
-                        select t).ToList();
-                    return things.Count > 0 ? things.First() : null;
-                }
-            }
-        }
-
-        public Thing StoredThing
-        {
-            get
-            {
-                if (storedThingDef == null) return null;
-
-                List<Thing> things = (
-                    from t in Find.ThingGrid.ThingsListAt(outputSlot)
-                    where t.def == storedThingDef
-                    select t).ToList();
-                if (things.Count <= 0) return null;
-                return things.First();
-            }
-        }
-
-        public bool StorageFull
-        {
-            get
-            {
-                if (storedThingDef == null) return false;
-                if (StoredThing == null) return false;
-                if (StoredThing.stackCount >= ApparentMaxStorage) return true;
-                return false;
-            }
-        }
-
-        public int ApparentMaxStorage
-        {
-            get
-            {
-                if (storedThingDef == null) return 0;
-                if (storedThingDef.stuffProps != null)
-                {
-                    return (int)(maxStorage / storedThingDef.VolumePerUnit);
-                }
-                return maxStorage;
-            }
-        }
-
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.LookDef(ref this.storedThingDef, "storedThingDef");
+            Scribe_Defs.LookDef<ThingDef>(ref this.storedThingDef, "storedThingDef");
         }
     }
 }

@@ -16,14 +16,14 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
     <defName>Storage_Skip</defName>
     <label>Skip</label>
-    <thingClass>Building_Storage</thingClass>
+    <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/Skip</texPath>
+      <texPath>Things/Building/Furniture/SkipSmall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,3</drawsize>
+      <drawsize>2,1</drawsize>
     </graphicData>
     <altitudeLayer>Waist</altitudeLayer>
     <passability>Impassable</passability>
@@ -39,7 +39,7 @@
     </stuffCategories>
     <costStuffCount>30</costStuffCount>
     <description>Haulers carry materials here for storage.</description>
-    <size>(2,3)</size>
+    <size>(2,1)</size>
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
@@ -57,6 +57,7 @@
     <inspectorTabs>
       <li>ITab_Storage</li>
     </inspectorTabs>
+    <tickerType>Normal</tickerType>
     <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>

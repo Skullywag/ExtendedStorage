@@ -37,6 +37,7 @@
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
+    <maxStorage>900</maxStorage>
     <costStuffCount>30</costStuffCount>
     <description>Haulers carry materials here for storage.</description>
     <size>(2,1)</size>

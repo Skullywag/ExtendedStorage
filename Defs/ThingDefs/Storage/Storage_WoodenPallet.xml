@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Buildings>
 
-
-  <ThingDef Name="BuildingBase" Abstract="True">
-    <category>Building</category>
-    <thingClass>Building</thingClass>
-    <soundImpactDefault>BulletImpactMetal</soundImpactDefault>
-    <selectable>true</selectable>
-    <drawerType>MapMeshAndRealTime</drawerType>
-    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-    <repairEffect>Repair</repairEffect>
-    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
-    <filthLeaving>BuildingRubble</filthLeaving>
-  </ThingDef>
-
   <!--============================== Storage ===========================-->
 
   <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
@@ -25,7 +12,7 @@
       <graphicClass>Graphic_Single</graphicClass>
       <drawsize>2,1</drawsize>
     </graphicData>
-    <maxStorage>300</maxStorage>
+    <maxStorage>600</maxStorage>
     <altitudeLayer>Waist</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
@@ -46,6 +33,7 @@
     </killedLeavings>
     <filthLeaving>BuildingRubble</filthLeaving>
     <building>
+      <preventDeterioration>true</preventDeterioration>
       <fixedStorageSettings>
         <priority>Important</priority>
         <filter>
@@ -54,6 +42,7 @@
           </categories>
           <thingDefs>
             <li>ArtilleryShell</li>
+            <li>Hay</li>
           </thingDefs>
         </filter>
       </fixedStorageSettings>

@@ -39,6 +39,7 @@
         <filter>
           <categories>
             <li>ResourcesRaw</li>
+            <li>Manufactured</li>
           </categories>
           <thingDefs>
             <li>ArtilleryShell</li>

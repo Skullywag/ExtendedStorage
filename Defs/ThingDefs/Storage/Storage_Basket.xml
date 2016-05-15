@@ -53,6 +53,9 @@
           <categories>
             <li>FoodRaw</li>
           </categories>
+          <thingDefs>
+            <li>HerbalMedicine</li>
+          </thingDefs>
         </filter>
       </fixedStorageSettings>
     </building>

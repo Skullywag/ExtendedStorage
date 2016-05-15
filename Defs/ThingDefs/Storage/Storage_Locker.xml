@@ -14,7 +14,7 @@
       <shaderType>CutoutComplex</shaderType>
     </graphicData>
     <altitudeLayer>Waist</altitudeLayer>
-    <passability>Impassable</passability>
+    <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>

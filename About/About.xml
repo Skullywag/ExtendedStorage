@@ -2,6 +2,6 @@
 <ModMetaData>
 	<name>ExtendedStorage</name>
 	<author>Skullywag</author>
-	<targetVersion>Alpha 13</targetVersion>
+	<targetVersion>0.14.1234</targetVersion>
 	<description>Adds additional storage buildings that multi stack items.</description>
 </ModMetaData>

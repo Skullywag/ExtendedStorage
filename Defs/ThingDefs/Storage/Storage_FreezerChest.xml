@@ -13,7 +13,7 @@
       <drawsize>2,1</drawsize>
     </graphicData>
     <maxStorage>500</maxStorage>
-    <altitudeLayer>Waist</altitudeLayer>
+    <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
@@ -29,7 +29,7 @@
     </stuffCategories>
     <costStuffCount>50</costStuffCount>
     <costList>
-      <Components>2</Components>
+      <Component>2</Component>
     </costList>
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
@@ -70,6 +70,10 @@
       <li Class="CompProperties_Breakdownable"/>
       <li Class="CompProperties_Flickable" />
     </comps>
+    <researchPrerequisites>
+      <li>MicroelectronicsBasics</li>
+      <li>AirConditioning</li>
+    </researchPrerequisites>
   </ThingDef>
 
 </Buildings>

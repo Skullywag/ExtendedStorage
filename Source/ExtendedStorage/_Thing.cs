@@ -33,14 +33,18 @@ namespace ExtendedStorage
         internal static MethodInfo mi_Notify_NoZoneOverlapThingSpawned;
         internal static void rNotify_NoZoneOverlapThingSpawned(Thing thing)
         {
-            mi_Notify_NoZoneOverlapThingSpawned = typeof(ZoneManager).GetMethod("Notify_NoZoneOverlapThingSpawned", (BindingFlags)60); // public+nonpublic+instance+static
+            if (mi_Notify_NoZoneOverlapThingSpawned == null){
+                mi_Notify_NoZoneOverlapThingSpawned = typeof(ZoneManager).GetMethod("Notify_NoZoneOverlapThingSpawned", (BindingFlags)60); // public+nonpublic+instance+static
+            }
             mi_Notify_NoZoneOverlapThingSpawned.Invoke(Find.ZoneManager, new object[] { thing });
         }
 
         internal static MethodInfo mi_Notify_BarrierSpawned;
         internal static void rNotify_BarrierSpawned(Thing thing)
         {
-            mi_Notify_BarrierSpawned = typeof(RegionDirtyer).GetMethod("Notify_BarrierSpawned", (BindingFlags)60); // public+nonpublic+instance+static
+            if (mi_Notify_BarrierSpawned == null){
+                mi_Notify_BarrierSpawned = typeof(RegionDirtyer).GetMethod("Notify_BarrierSpawned", (BindingFlags)60); // public+nonpublic+instance+static
+            }
             mi_Notify_BarrierSpawned.Invoke(null, new object[] { thing });
         }
 

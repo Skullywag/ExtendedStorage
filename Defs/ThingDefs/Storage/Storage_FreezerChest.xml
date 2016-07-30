@@ -74,6 +74,10 @@
       <li>MicroelectronicsBasics</li>
       <li>AirConditioning</li>
     </researchPrerequisites>
+    <minifiedDef>MinifiedFurniture</minifiedDef>
+    <tradeTags>
+      <li>Furniture</li>
+    </tradeTags>
   </ThingDef>
 
 </Buildings>

@@ -51,6 +51,10 @@
     <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>
+    <minifiedDef>MinifiedFurniture</minifiedDef>
+    <tradeTags>
+      <li>Furniture</li>
+    </tradeTags>
   </ThingDef>
   
 </Buildings>

@@ -73,7 +73,7 @@ namespace ExtendedStorage
                 }));
                 return;
             }
-            if (Current.ProgramState != ProgramState.MapInitializing || Current.ProgramState != ProgramState.MapPlaying)
+            if (Current.ProgramState != ProgramState.MapInitializing && Current.ProgramState != ProgramState.MapPlaying)
             {
                 if (this.stackCount > this.def.stackLimit)
                 {

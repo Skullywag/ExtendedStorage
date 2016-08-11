@@ -107,11 +107,13 @@ namespace ExtendedStorage
         {
             if (this.storedThingDef == null)
             {
+                Log.Error("storedthingdef is null");
                 return;
             }
             if (this.StoredThing == null)
             {
                 this.storedThingDef = null;
+                Log.Error("storedthing is null so setting storedthingdef to null");
                 return;
             }
             List<Thing> list = (
@@ -121,6 +123,7 @@ namespace ExtendedStorage
                 select t).ToList<Thing>();
             if (list.Count > 1)
             {
+                Log.Error("storedthingdef in checkoutput is "+this.storedThingDef);
                 Thing thing = ThingMaker.MakeThing(this.storedThingDef, list.First<Thing>().Stuff);
                 foreach (Thing current in list)
                 {
@@ -162,6 +165,7 @@ namespace ExtendedStorage
                     return;
                 }
                 Thing thing2 = ThingMaker.MakeThing(storedThingAtInput2.def, storedThingAtInput2.Stuff);
+                Log.Error("thing2 = "+thing2.def.defName);
                 GenSpawn.Spawn(thing2, this.outputSlot);
                 storedThingAtInput2.Destroy(0);
             }

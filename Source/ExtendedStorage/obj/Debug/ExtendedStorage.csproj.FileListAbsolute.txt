@@ -57,3 +57,14 @@ C:\Users\mjsku\Desktop\RimWorldAlpha14Win\RimWorld1234Win\Mods\ExtendedStorage\S
 C:\Users\mjsku\Desktop\RimWorldAlpha14Win\RimWorld1234Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\mjsku\Desktop\RimWorldAlpha14Win\RimWorld1234Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\NAudio.dll
 C:\Users\mjsku\Desktop\RimWorldAlpha14Win\RimWorld1234Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\NVorbis.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\ExtendedStorage.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\ExtendedStorage.pdb
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\Community Core Library.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\NAudio.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\NVorbis.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.csprojResolveAssemblyReference.cache
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.pdb
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\Assembly-CSharp.dll
+C:\Users\mjsku\Desktop\RimWorldAlpha14eWin\RimWorld1249Win\Mods\ExtendedStorage\Source\ExtendedStorage\bin\Debug\UnityEngine.dll

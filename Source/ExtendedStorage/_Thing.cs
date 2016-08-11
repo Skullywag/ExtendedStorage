@@ -73,19 +73,19 @@ namespace ExtendedStorage
                 }));
                 return;
             }
-            if (Current.ProgramState != ProgramState.MapInitializing)
+            if (Current.ProgramState != ProgramState.MapInitializing || Current.ProgramState != ProgramState.MapPlaying)
             {
                 if (this.stackCount > this.def.stackLimit)
                 {
                     Log.Error(string.Concat(new object[]
                     {
-                "Spawned ",
-                this,
-                " with stackCount ",
-                this.stackCount,
-                " but stackLimit is ",
-                this.def.stackLimit,
-                ". Truncating."
+                        "Spawned ",
+                        this,
+                        " with stackCount ",
+                        this.stackCount,
+                        " but stackLimit is ",
+                        this.def.stackLimit,
+                        ". Truncating."
                     }));
                     this.stackCount = this.def.stackLimit;
                 }

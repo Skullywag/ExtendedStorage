@@ -16,14 +16,14 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_Basket</defName>
     <label>Food Basket</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/Basket</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
+      <texPath>Things/Building/Furniture/Basket/Basket</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(4,3)</drawSize>
     </graphicData>
     <maxStorage>500</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
@@ -31,11 +31,11 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>580</WorkToMake>
+      <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>8</Beauty>
     </statBases>
-    <description>Haulers carry raw food here for storage.</description>
+    <description>Haulers carry raw food and plant matter here for storage.</description>
     <size>(2,1)</size>
     <stuffCategories>
       <li>Metallic</li>
@@ -52,9 +52,13 @@
         <filter>
           <categories>
             <li>FoodRaw</li>
+            <li>PlantMatter</li>
+            <li>Drugs</li>
           </categories>
           <thingDefs>
             <li>HerbalMedicine</li>
+            <li>Pemmican</li>
+            <li>Kibble</li>
           </thingDefs>
         </filter>
       </fixedStorageSettings>
@@ -70,6 +74,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

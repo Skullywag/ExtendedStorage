@@ -3,26 +3,25 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_Locker</defName>
-    <label>Locker</label>
+    <label>Clothing Rack</label>
     <thingClass>Building_Storage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/Locker</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
-      <shaderType>CutoutComplex</shaderType>
+      <texPath>Things/Building/Furniture/ClothingRack/ClothingRack</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(3,2)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>580</WorkToMake>
+      <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>1</Beauty>
     </statBases>
-    <description>Haulers carry weapons and apparel here for storage.</description>
+    <description>Haulers carry apparel here for storage.</description>
     <size>(2,1)</size>
     <stuffCategories>
       <li>Metallic</li>
@@ -38,7 +37,6 @@
         <priority>Important</priority>
         <filter>
           <categories>
-            <li>Weapons</li>
             <li>Apparel</li>
           </categories>
         </filter>
@@ -54,6 +52,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

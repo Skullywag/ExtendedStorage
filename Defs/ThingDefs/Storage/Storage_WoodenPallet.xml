@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_WoodenPallet</defName>
     <label>Wooden Pallet</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -18,7 +18,7 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>780</WorkToMake>
+      <WorkToBuild>780</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
     </statBases>
@@ -40,9 +40,11 @@
           <categories>
             <li>ResourcesRaw</li>
             <li>Manufactured</li>
+            <li>PlantMatter</li>
+            <li>Drugs</li>
           </categories>
           <thingDefs>
-            <li>ArtilleryShell</li>
+            <li>MortarShell</li>
             <li>Hay</li>
           </thingDefs>
         </filter>
@@ -59,6 +61,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

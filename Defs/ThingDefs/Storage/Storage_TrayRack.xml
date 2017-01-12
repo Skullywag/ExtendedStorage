@@ -3,14 +3,14 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_TrayRack</defName>
     <label>Tray rack</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/TrayRack</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
+      <texPath>Things/Building/Furniture/TrayRack/TrayRack</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(4,3)</drawSize>
     </graphicData>
     <maxStorage>100</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
@@ -18,11 +18,11 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>580</WorkToMake>
+      <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>7</Beauty>
     </statBases>
-    <description>Haulers carry trays here for storage.</description>
+    <description>Haulers carry meals and treats here for storage.</description>
     <size>(2,1)</size>
     <stuffCategories>
       <li>Metallic</li>
@@ -40,6 +40,9 @@
           <categories>
             <li>FoodMeals</li>
           </categories>
+          <thingDefs>
+            <li>Chocolate</li>
+          </thingDefs>
         </filter>
       </fixedStorageSettings>
     </building>
@@ -54,6 +57,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

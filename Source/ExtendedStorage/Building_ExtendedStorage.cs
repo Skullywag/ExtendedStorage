@@ -19,7 +19,7 @@ namespace ExtendedStorage
                 if (this.storedThingDef != null)
                 {
                     List<Thing> list = (
-                        from t in Find.ThingGrid.ThingsAt(this.inputSlot)
+                        from t in Find.VisibleMap.thingGrid.ThingsAt(this.inputSlot)
                         where t.def == this.storedThingDef
                         select t).ToList<Thing>();
                     if (list.Count <= 0)
@@ -31,7 +31,7 @@ namespace ExtendedStorage
                 else
                 {
                     List<Thing> list2 = (
-                        from t in Find.ThingGrid.ThingsAt(this.inputSlot)
+                        from t in Find.VisibleMap.thingGrid.ThingsAt(this.inputSlot)
                         where this.slotGroup.Settings.AllowedToAccept(t)
                         select t).ToList<Thing>();
                     if (list2.Count <= 0)
@@ -51,7 +51,7 @@ namespace ExtendedStorage
                     return null;
                 }
                 List<Thing> list = (
-                    from t in Find.ThingGrid.ThingsListAt(this.outputSlot)
+                    from t in Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
                     where t.def == this.storedThingDef
                     select t).ToList<Thing>();
                 if (list.Count <= 0)
@@ -83,9 +83,9 @@ namespace ExtendedStorage
                 return this.maxStorage;
             }
         }
-        public override void SpawnSetup()
+        public override void SpawnSetup(Map map)
         {
-            base.SpawnSetup();
+            base.SpawnSetup(map);
             this.maxStorage = ((ESdef)this.def).maxStorage;
             List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList<IntVec3>();
             this.inputSlot = list[0];
@@ -115,7 +115,7 @@ namespace ExtendedStorage
                 return;
             }
             List<Thing> list = (
-                from t in Find.ThingGrid.ThingsAt(this.outputSlot)
+                from t in Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
                 where t.def == this.storedThingDef
                 orderby t.stackCount
                 select t).ToList<Thing>();
@@ -127,7 +127,7 @@ namespace ExtendedStorage
                     thing.stackCount += current.stackCount;
                     current.Destroy(0);
                 }
-                GenSpawn.Spawn(thing, this.outputSlot);
+                GenSpawn.Spawn(thing, this.outputSlot, Find.VisibleMap);
             }
         }
         private void TryMoveItem()
@@ -141,7 +141,7 @@ namespace ExtendedStorage
                     Thing thing = ThingMaker.MakeThing(this.storedThingDef, storedThingAtInput.Stuff);
                     thing.stackCount = storedThingAtInput.stackCount;
                     storedThingAtInput.Destroy(0);
-                    GenSpawn.Spawn(thing, this.outputSlot);
+                    GenSpawn.Spawn(thing, this.outputSlot, Find.VisibleMap);
                 }
                 return;
             }
@@ -162,7 +162,7 @@ namespace ExtendedStorage
                     return;
                 }
                 Thing thing2 = ThingMaker.MakeThing(storedThingAtInput2.def, storedThingAtInput2.Stuff);
-                GenSpawn.Spawn(thing2, this.outputSlot);
+                GenSpawn.Spawn(thing2, this.outputSlot, Find.VisibleMap);
                 storedThingAtInput2.Destroy(0);
             }
         }

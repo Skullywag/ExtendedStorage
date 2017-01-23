@@ -94,7 +94,7 @@ namespace ExtendedStorage
         public override void Tick()
         {
             base.Tick();
-            if (Find.TickManager.TicksGame % 10 == 0)
+            if ( this.IsHashIntervalTick( 10 ) )
             {
                 this.CheckOutputSlot();
                 if (!this.StorageFull)

@@ -43,7 +43,7 @@
       </fixedStorageSettings>
     </building>
     <inspectorTabs>
-      <li>ITab_Storage</li>
+      <li>ExtendedStorage.ITab_Storage</li>
     </inspectorTabs>
     <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>

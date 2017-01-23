@@ -1,7 +1,7 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using Verse;
 namespace ExtendedStorage
@@ -11,16 +11,28 @@ namespace ExtendedStorage
         private IntVec3 inputSlot;
         private IntVec3 outputSlot;
         private int maxStorage = 1000;
-        private ThingDef storedThingDef;
+        private ThingDef _storedThingDef;
+
+        private ThingDef StoredThingDef
+        {
+            get { return _storedThingDef; }
+            set
+            {
+                if ( _storedThingDef != value )
+                    Notify_StoredThingDefChanged( value );
+                _storedThingDef = value;
+            }
+        }
+        public StorageSettings userSettings;
         public Thing StoredThingAtInput
         {
             get
             {
-                if (this.storedThingDef != null)
+                if (this.StoredThingDef != null)
                 {
                     List<Thing> list = (
                         from t in Find.VisibleMap.thingGrid.ThingsAt(this.inputSlot)
-                        where t.def == this.storedThingDef
+                        where t.def == this.StoredThingDef
                         select t).ToList<Thing>();
                     if (list.Count <= 0)
                     {
@@ -46,13 +58,13 @@ namespace ExtendedStorage
         {
             get
             {
-                if (this.storedThingDef == null)
+                if (this.StoredThingDef == null)
                 {
                     return null;
                 }
                 List<Thing> list = (
                     from t in Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
-                    where t.def == this.storedThingDef
+                    where t.def == this.StoredThingDef
                     select t).ToList<Thing>();
                 if (list.Count <= 0)
                 {
@@ -61,28 +73,110 @@ namespace ExtendedStorage
                 return list.First<Thing>();
             }
         }
+
         public bool StorageFull
         {
             get
             {
-                return this.storedThingDef != null && this.StoredThing != null && this.StoredThing.stackCount >= this.ApparentMaxStorage;
+                return this.StoredThingDef != null && this.StoredThing != null && this.StoredThing.stackCount >= this.ApparentMaxStorage;
             }
         }
+
         public int ApparentMaxStorage
         {
             get
             {
-                if (this.storedThingDef == null)
+                if (this.StoredThingDef == null)
                 {
                     return 0;
                 }
-                if (this.storedThingDef.smallVolume)
+                if (this.StoredThingDef.smallVolume)
                 {
                     return (int)((float)this.maxStorage / 0.2f);
                 }
                 return this.maxStorage;
             }
         }
+        
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            // as far as I can tell, base.GetGizmos() simply calls StorageSettingsClipboard.CopyPasteGizmosFor(this.settings)
+            return StorageSettingsClipboard.CopyPasteGizmosFor( userSettings );
+        }
+
+        public override void PostMake()
+        {
+            // create 'game' storage settings
+            base.PostMake();
+
+            // create 'user' storage settings
+            userSettings = new StorageSettings( this );
+
+            // create new filter so we can control the 'onChange' callback
+            userSettings.filter = new ThingFilter( Notify_UserSettingsChanged );
+
+            // copy over default filter/priority
+            if ( def.building.defaultStorageSettings != null )
+                userSettings.CopyFrom( this.def.building.defaultStorageSettings );
+        }
+
+        public void Notify_UserSettingsChanged()
+        {
+            // the vanilla StorageSettings.TryNotifyChanged will alert the SlotGroupManager that 
+            // storage settings have changed. We don't need this behaviour for user settings, as these
+            // don't directly influence the slotgroup, and any changes we make are propagated to the 
+            // 'real' storage settings, which will still notify the SlotGroupManager on change.
+
+#if DEBUG
+            Log.Message( $"UserSettingsChanged called" );
+#endif
+
+            // check if priority changed, update if needed
+            if ( settings.Priority != userSettings.Priority )
+                settings.Priority = userSettings.Priority;
+
+            // we could check for changed allowances, but checking for special filters would be tricky.
+            // Instead, just copy the filter over, resetting it.
+            settings.filter.CopyAllowancesFrom( userSettings.filter );
+
+            // if our current thingdef is not null and still allowed, re-apply the constraint to the filter.
+            if ( StoredThingDef != null && settings.filter.Allows( StoredThingDef ) )
+                Notify_StoredThingDefChanged( StoredThingDef );
+        }
+
+        public void Notify_StoredThingDefChanged( ThingDef newDef )
+        {
+            // Whenever the stored thingDef changes, we need to update the 'real' storage settings,
+            // the intended effect is that when something is stored, the storage will henceforth only
+            // accept more of this def.
+            if ( newDef != null )
+            {
+                // disallow everything currently allowed
+                // NOTE: Can't use SetDisallowAll() because that would also disallow special filters
+                List<ThingDef> allowed = new List<ThingDef>( settings.filter.AllowedThingDefs );
+                foreach ( ThingDef def in allowed )
+                    settings.filter.SetAllow( def, false );
+
+                // allow this specific def
+                settings.filter.SetAllow( newDef, true );
+            }
+
+            // When emptied, just copy over userSettings
+            else
+                settings.filter.CopyAllowancesFrom( userSettings.filter );
+        }
+
+        public override string GetInspectString()
+        {
+            StringBuilder inspectString = new StringBuilder();
+            inspectString.Append( base.GetInspectString() );
+            inspectString.Append(
+                                 "ExtendedStorage.CurrentlyStoring".Translate( StoredThingDef?.LabelCap ??
+                                                                               "ExtendedStorage.Nothing".Translate() ) );
+            return inspectString.ToString();
+        }
+        
+
         public override void SpawnSetup(Map map)
         {
             base.SpawnSetup(map);
@@ -105,23 +199,23 @@ namespace ExtendedStorage
         }
         private void CheckOutputSlot()
         {
-            if (this.storedThingDef == null)
+            if (this.StoredThingDef == null)
             {
                 return;
             }
             if (this.StoredThing == null)
             {
-                this.storedThingDef = null;
+                this.StoredThingDef = null;
                 return;
             }
             List<Thing> list = (
                 from t in Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
-                where t.def == this.storedThingDef
+                where t.def == this.StoredThingDef
                 orderby t.stackCount
                 select t).ToList<Thing>();
             if (list.Count > 1)
             {
-                Thing thing = ThingMaker.MakeThing(this.storedThingDef, list.First<Thing>().Stuff);
+                Thing thing = ThingMaker.MakeThing(this.StoredThingDef, list.First<Thing>().Stuff);
                 foreach (Thing current in list)
                 {
                     thing.stackCount += current.stackCount;
@@ -132,13 +226,13 @@ namespace ExtendedStorage
         }
         private void TryMoveItem()
         {
-            if (this.storedThingDef == null)
+            if (this.StoredThingDef == null)
             {
                 Thing storedThingAtInput = this.StoredThingAtInput;
                 if (storedThingAtInput != null)
                 {
-                    this.storedThingDef = storedThingAtInput.def;
-                    Thing thing = ThingMaker.MakeThing(this.storedThingDef, storedThingAtInput.Stuff);
+                    this.StoredThingDef = storedThingAtInput.def;
+                    Thing thing = ThingMaker.MakeThing(this.StoredThingDef, storedThingAtInput.Stuff);
                     thing.stackCount = storedThingAtInput.stackCount;
                     storedThingAtInput.Destroy(0);
                     GenSpawn.Spawn(thing, this.outputSlot, Find.VisibleMap);
@@ -169,7 +263,7 @@ namespace ExtendedStorage
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.LookDef<ThingDef>(ref this.storedThingDef, "storedThingDef");
+            Scribe_Defs.LookDef<ThingDef>(ref _storedThingDef, "storedThingDef");
         }
     }
 }

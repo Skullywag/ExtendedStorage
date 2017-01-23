@@ -51,7 +51,7 @@
       </fixedStorageSettings>
     </building>
     <inspectorTabs>
-      <li>ITab_Storage</li>
+      <li>ExtendedStorage.ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
     <designationCategory>Furniture</designationCategory>

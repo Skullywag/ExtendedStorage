@@ -1,6 +1,8 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -112,12 +114,12 @@ namespace ExtendedStorage
             // create 'user' storage settings
             userSettings = new StorageSettings( this );
 
-            // create new filter so we can control the 'onChange' callback
-            userSettings.filter = new ThingFilter( Notify_UserSettingsChanged );
-
             // copy over default filter/priority
             if ( def.building.defaultStorageSettings != null )
                 userSettings.CopyFrom( this.def.building.defaultStorageSettings );
+
+            // change callback to point to our custom logic
+            SetCallback( userSettings.filter, Notify_UserSettingsChanged );
         }
 
         public void Notify_UserSettingsChanged()
@@ -126,11 +128,7 @@ namespace ExtendedStorage
             // storage settings have changed. We don't need this behaviour for user settings, as these
             // don't directly influence the slotgroup, and any changes we make are propagated to the 
             // 'real' storage settings, which will still notify the SlotGroupManager on change.
-
-#if DEBUG
-            Log.Message( $"UserSettingsChanged called" );
-#endif
-
+            
             // check if priority changed, update if needed
             if ( settings.Priority != userSettings.Priority )
                 settings.Priority = userSettings.Priority;
@@ -260,10 +258,47 @@ namespace ExtendedStorage
                 storedThingAtInput2.Destroy(0);
             }
         }
+
+        private FieldInfo _settingsChangedCallback_FI = typeof( ThingFilter ).GetField( "settingsChangedCallback",
+                                                                                     BindingFlags.NonPublic |
+                                                                                     BindingFlags.Instance );
+
+        protected void SetCallback( ThingFilter filter, Action callback )
+        {
+            if ( _settingsChangedCallback_FI == null )
+                throw new ArgumentNullException( "_settingsChangedCallback FieldInfo" );
+
+            _settingsChangedCallback_FI.SetValue( filter, callback );
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.LookDef<ThingDef>(ref _storedThingDef, "storedThingDef");
+            Scribe_Defs.LookDef<ThingDef>(ref _storedThingDef, "storedThingDef" );
+            Scribe_Deep.LookDeep( ref userSettings, "userSettings" );
+            
+            // we need to re-apply our callback on the userSettings after load.
+            // in addition, we need some migration code for handling mid-save upgrades.
+            // todo: the migration part of this can be removed on the A17 update.
+            if ( Scribe.mode == LoadSaveMode.PostLoadInit )
+            {
+                // migration
+                if ( userSettings == null )
+                {
+                    // create 'user' storage settings
+                    userSettings = new StorageSettings( this );
+                    
+                    // copy over previous filter/priority
+                    userSettings.filter.CopyAllowancesFrom( settings.filter );
+                    userSettings.Priority = settings.Priority;
+
+                    // apply currently stored logic
+                    Notify_StoredThingDefChanged( StoredThingDef );
+                } 
+
+                // re-apply callback
+                SetCallback( userSettings.filter, Notify_UserSettingsChanged );
+            }
         }
     }
 }

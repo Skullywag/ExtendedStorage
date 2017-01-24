@@ -99,11 +99,32 @@ namespace ExtendedStorage
                 return this.maxStorage;
             }
         }
+
+        private Func<IEnumerable<Gizmo>> Building_GetGizmos;
         
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            // as far as I can tell, base.GetGizmos() simply calls StorageSettingsClipboard.CopyPasteGizmosFor(this.settings)
-            return StorageSettingsClipboard.CopyPasteGizmosFor( userSettings );
+            // we can't extend the results of base.GetGizmos() because we are replacing the 
+            // copy/paste buttons for filter settings. Main problem then is that we also need 
+            // to re-add any comp gizmos, the minifiable (re-)install gizmo and the copy gizmo.
+            // So instead, let's get hacky and try to call the grandparents' implementation of 
+            // GetGizmos.
+
+            if ( Building_GetGizmos == null )
+            {
+                // http://stackoverflow.com/a/32562464
+                var ptr = typeof( Building ).GetMethod( "GetGizmos", BindingFlags.Instance | BindingFlags.Public ).MethodHandle.GetFunctionPointer();
+                Building_GetGizmos = (Func<IEnumerable<Gizmo>>)Activator.CreateInstance( typeof( Func<IEnumerable<Gizmo>> ), this, ptr );
+            }
+
+            // grandparent gizmos, skipping the base CopyPaste gizmos
+            var gizmos = Building_GetGizmos();
+            foreach ( Gizmo gizmo in gizmos )
+                yield return gizmo;
+
+            // our CopyPasta gizmos
+            foreach ( Gizmo gizmo in StorageSettingsClipboard.CopyPasteGizmosFor( userSettings ) )
+                yield return gizmo;
         }
 
         public override void PostMake()

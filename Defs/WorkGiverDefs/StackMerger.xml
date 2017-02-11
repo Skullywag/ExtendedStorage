@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<WorkGivers>
+    <WorkGiverDef>
+        <defName>ExtendedStorage_MergeStacks</defName>
+        <label>merge storage</label>
+        <giverClass>ExtendedStorage.WorkGiver_StackMerger</giverClass>
+        <workType>Hauling</workType>
+        <emergency>false</emergency>
+        <verb>tidy up storage</verb>
+        <gerund>tidying up storage</gerund>
+        <priorityInType>6</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
+</WorkGivers>

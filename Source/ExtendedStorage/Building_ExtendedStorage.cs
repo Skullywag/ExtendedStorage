@@ -15,6 +15,9 @@ namespace ExtendedStorage
         private int maxStorage = 1000;
         private ThingDef _storedThingDef;
 
+        public IntVec3 InputSlot => inputSlot;
+        public IntVec3 OutputSlot => outputSlot;
+
         private ThingDef StoredThingDef
         {
             get { return _storedThingDef; }

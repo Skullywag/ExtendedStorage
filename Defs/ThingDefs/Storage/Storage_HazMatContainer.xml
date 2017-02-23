@@ -3,15 +3,14 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_HazMatContainer</defName>
     <label>HazMat Container</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/HazMat</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
-      <shaderType>CutoutComplex</shaderType>
+      <texPath>Things/Building/Furniture/HazMat/HazMat</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(4,3)</drawSize>
     </graphicData>
     <maxStorage>600</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
@@ -19,7 +18,7 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>580</WorkToMake>
+      <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
     </statBases>
@@ -54,6 +53,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

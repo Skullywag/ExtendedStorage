@@ -3,33 +3,34 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_WoodenPallet</defName>
-    <label>Wooden Pallet</label>
+    <label>Pallet</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/WoodenPalletSmall</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
+      <texPath>Things/Building/Furniture/Pallet/Pallet</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawsize>(4,3)</drawsize>
     </graphicData>
     <maxStorage>600</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
-      <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>780</WorkToMake>
+      <MaxHitPoints>150</MaxHitPoints>
+      <WorkToBuild>780</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
     </statBases>
     <description>Haulers carry materials here for storage.</description>
     <size>(2,1)</size>
     <stuffCategories>
+      <li>Metallic</li>
       <li>Woody</li>
     </stuffCategories>
-    <costStuffCount>30</costStuffCount>
+    <costStuffCount>75</costStuffCount>
     <killedLeavings>
-      <ChunkSlagSteel>3</ChunkSlagSteel>
+      <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
     <filthLeaving>BuildingRubble</filthLeaving>
     <building>
@@ -40,16 +41,18 @@
           <categories>
             <li>ResourcesRaw</li>
             <li>Manufactured</li>
+            <li>PlantMatter</li>
+            <li>Drugs</li>
           </categories>
           <thingDefs>
-            <li>ArtilleryShell</li>
+            <li>MortarShell</li>
             <li>Hay</li>
           </thingDefs>
         </filter>
       </fixedStorageSettings>
     </building>
     <inspectorTabs>
-      <li>ITab_Storage</li>
+      <li>ExtendedStorage.ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
     <designationCategory>Furniture</designationCategory>
@@ -59,6 +62,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

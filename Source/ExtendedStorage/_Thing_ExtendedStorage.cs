@@ -11,52 +11,52 @@ using System.Reflection;
 
 namespace ExtendedStorage
 {
-    internal class _Thing : Thing
+    internal class _Thing_ExtendedStorage : Thing
     {
-        internal static FieldInfo _thingStateInt;
-        internal static ThingState GetThingStateInt(Thing thing)
+        internal static FieldInfo _mapIndexOrState;
+        internal static sbyte GetMapIndexOrState(Thing thing)
         {
-            if (_thingStateInt == null)
+            if (_mapIndexOrState == null)
             {
-                _thingStateInt = typeof(Thing).GetField("thingStateInt", BindingFlags.Instance | BindingFlags.NonPublic);
+                _mapIndexOrState = typeof(Thing).GetField("mapIndexOrState", BindingFlags.Instance | BindingFlags.NonPublic);
             }
-            return (ThingState)_thingStateInt.GetValue(thing);
+            return (sbyte)_mapIndexOrState.GetValue(thing);
         }
-        internal static void SetThingStateInt(Thing thing, ThingState value)
+        internal static void SetMapIndexOrState(Thing thing, sbyte value)
         {
-            if (_thingStateInt == null)
+            if (_mapIndexOrState == null)
             {
-                _thingStateInt = typeof(Thing).GetField("thingStateInt", BindingFlags.Instance | BindingFlags.NonPublic);
+                _mapIndexOrState = typeof(Thing).GetField("mapIndexOrState", BindingFlags.Instance | BindingFlags.NonPublic);
             }
-            _thingStateInt.SetValue(thing, value);
+            _mapIndexOrState.SetValue(thing, value);
         }
         internal static MethodInfo mi_Notify_NoZoneOverlapThingSpawned;
-        internal static void rNotify_NoZoneOverlapThingSpawned(Thing thing)
+        internal static void rNotify_NoZoneOverlapThingSpawned(Thing thing, Map map)
         {
             mi_Notify_NoZoneOverlapThingSpawned = typeof(ZoneManager).GetMethod("Notify_NoZoneOverlapThingSpawned", (BindingFlags)60); // public+nonpublic+instance+static
-            mi_Notify_NoZoneOverlapThingSpawned.Invoke(Find.ZoneManager, new object[] { thing });
+            mi_Notify_NoZoneOverlapThingSpawned.Invoke(map.zoneManager, new object[] { thing });
         }
 
         internal static MethodInfo mi_Notify_BarrierSpawned;
-        internal static void rNotify_BarrierSpawned(Thing thing)
+        internal static void rNotify_BarrierSpawned(Thing thing, Map map)
         {
             mi_Notify_BarrierSpawned = typeof(RegionDirtyer).GetMethod("Notify_BarrierSpawned", (BindingFlags)60); // public+nonpublic+instance+static
-            mi_Notify_BarrierSpawned.Invoke(null, new object[] { thing });
+            mi_Notify_BarrierSpawned.Invoke(map.regionDirtyer, new object[] { thing });
         }
 
-        internal void _SpawnSetup()
+        internal void _SpawnSetup(Map map)
         {
             if (this.Destroyed)
             {
                 Log.Error(string.Concat(new object[]
                 {
-                    "Spawning destroyed thing ",
-                    this,
-                    " at ",
-                    this.Position,
-                    ". Correcting."
+            "Spawning destroyed thing ",
+            this,
+            " at ",
+            this.Position,
+            ". Correcting."
                 }));
-                SetThingStateInt(this, ThingState.Unspawned);
+                SetMapIndexOrState(this, -1);
                 if (this.HitPoints <= 0 && this.def.useHitPoints)
                 {
                     this.HitPoints = 1;
@@ -66,17 +66,22 @@ namespace ExtendedStorage
             {
                 Log.Error(string.Concat(new object[]
                 {
-                    "Tried to spawn already-spawned thing ",
-                    this,
-                    " at ",
-                    this.Position
+            "Tried to spawn already-spawned thing ",
+            this,
+            " at ",
+            this.Position
                 }));
                 return;
             }
-
-            this.holder = null;
-            SetThingStateInt(this, ThingState.Spawned);
-            Find.Map.listerThings.Add(this);
+            int num = Find.Maps.IndexOf(map);
+            if (num < 0)
+            {
+                Log.Error("Tried to spawn thing " + this + ", but the map provided does not exist.");
+                return;
+            }
+            this.holdingContainer = null;
+            SetMapIndexOrState(this, (sbyte)num);
+            this.Map.listerThings.Add(this);
             if (Find.TickManager != null)
             {
                 Find.TickManager.RegisterAllTickabilityFor(this);
@@ -86,46 +91,46 @@ namespace ExtendedStorage
                 CellRect.CellRectIterator iterator = this.OccupiedRect().GetIterator();
                 while (!iterator.Done())
                 {
-                    Find.Map.mapDrawer.MapMeshDirty(iterator.Current, MapMeshFlag.Things);
+                    this.Map.mapDrawer.MapMeshDirty(iterator.Current, MapMeshFlag.Things);
                     iterator.MoveNext();
                 }
             }
             if (this.def.drawerType != DrawerType.MapMeshOnly)
             {
-                Find.DynamicDrawManager.RegisterDrawable(this);
+                this.Map.dynamicDrawManager.RegisterDrawable(this);
             }
             if (this.def.hasTooltip)
             {
-                Find.TooltipGiverList.RegisterTooltipGiver(this);
+                this.Map.tooltipGiverList.RegisterTooltipGiver(this);
             }
             if (this.def.graphicData != null && this.def.graphicData.Linked)
             {
-                LinkGrid.Notify_LinkerCreatedOrDestroyed(this);
-                Find.MapDrawer.MapMeshDirty(this.Position, MapMeshFlag.Things, true, false);
+                this.Map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
+                this.Map.mapDrawer.MapMeshDirty(this.Position, MapMeshFlag.Things, true, false);
             }
             if (!this.def.CanOverlapZones)
             {
-                rNotify_NoZoneOverlapThingSpawned(this);
+                rNotify_NoZoneOverlapThingSpawned(this, map);
             }
             if (this.def.regionBarrier)
             {
-                rNotify_BarrierSpawned(this);
+                rNotify_BarrierSpawned(this, map);
             }
             if (this.def.pathCost != 0 || this.def.passability == Traversability.Impassable)
             {
-                Find.PathGrid.RecalculatePerceivedPathCostUnderThing(this);
+                this.Map.pathGrid.RecalculatePerceivedPathCostUnderThing(this);
             }
             if (this.def.passability == Traversability.Impassable)
             {
-                Reachability.ClearCache();
+                this.Map.reachability.ClearCache();
             }
-            Find.CoverGrid.Register(this);
+            this.Map.coverGrid.Register(this);
             if (this.def.category == ThingCategory.Item)
             {
-                ListerHaulables.Notify_Spawned(this);
+                this.Map.listerHaulables.Notify_Spawned(this);
             }
-            Find.AttackTargetsCache.Notify_ThingSpawned(this);
-            Region validRegionAt_NoRebuild = Find.RegionGrid.GetValidRegionAt_NoRebuild(this.Position);
+            this.Map.attackTargetsCache.Notify_ThingSpawned(this);
+            Region validRegionAt_NoRebuild = this.Map.regionGrid.GetValidRegionAt_NoRebuild(this.Position);
             Room room = (validRegionAt_NoRebuild != null) ? validRegionAt_NoRebuild.Room : null;
             if (room != null)
             {
@@ -133,13 +138,17 @@ namespace ExtendedStorage
             }
             if (this.def.category == ThingCategory.Item)
             {
-                Building_Door building_Door = this.Position.GetEdifice() as Building_Door;
+                Building_Door building_Door = this.Position.GetEdifice(this.Map) as Building_Door;
                 if (building_Door != null)
                 {
                     building_Door.Notify_ItemSpawnedOrDespawnedOnTop(this);
                 }
             }
             StealAIDebugDrawer.Notify_ThingChanged(this);
+            if (this is IThingContainerOwner && Find.ColonistBar != null)
+            {
+                Find.ColonistBar.MarkColonistsDirty();
+            }
         }
     }
 }

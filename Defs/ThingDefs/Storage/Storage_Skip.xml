@@ -4,21 +4,21 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_Skip</defName>
     <label>Skip</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/SkipSmall</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
+      <texPath>Things/Building/Furniture/Skip/Skip</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawsize>(3,2)</drawsize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
-      <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>780</WorkToMake>
+      <MaxHitPoints>250</MaxHitPoints>
+      <WorkToBuild>780</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
     </statBases>
@@ -26,8 +26,8 @@
       <li>Metallic</li>
     </stuffCategories>
     <maxStorage>900</maxStorage>
-    <costStuffCount>30</costStuffCount>
-    <description>Haulers carry materials here for storage.</description>
+    <costStuffCount>90</costStuffCount>
+    <description>Haulers carry materials here for storage. Holds more than a wooden pallet but not as neatly.</description>
     <size>(2,1)</size>
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
@@ -44,7 +44,7 @@
       </fixedStorageSettings>
     </building>
     <inspectorTabs>
-      <li>ITab_Storage</li>
+      <li>ExtendedStorage.ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
     <designationCategory>Furniture</designationCategory>
@@ -54,6 +54,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

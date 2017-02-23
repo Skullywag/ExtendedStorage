@@ -3,14 +3,14 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Storage_FabricHamper</defName>
     <label>Fabric Hamper</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
     <graphicData>
-      <texPath>Things/Building/Furniture/FabricHamper</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
+      <texPath>Things/Building/Furniture/FabricHamper/FabricHamper</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(4,2)</drawSize>
       <shaderType>CutoutComplex</shaderType>
     </graphicData>
     <maxStorage>400</maxStorage>
@@ -19,17 +19,17 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToMake>580</WorkToMake>
+      <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>4</Beauty>
     </statBases>
     <description>Haulers carry textiles here for storage.</description>
     <size>(2,1)</size>
     <stuffCategories>
-      <li>Metallic</li>
-      <li>Woody</li>
+      <li>Leathery</li>
+      <li>Fabric</li>
     </stuffCategories>
-    <costStuffCount>15</costStuffCount>
+    <costStuffCount>45</costStuffCount>
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
@@ -45,7 +45,7 @@
       </fixedStorageSettings>
     </building>
     <inspectorTabs>
-      <li>ITab_Storage</li>
+      <li>ExtendedStorage.ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
     <designationCategory>Furniture</designationCategory>
@@ -55,6 +55,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
   
 </Buildings>

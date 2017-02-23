@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>ExtendedStorage</name>
-	<author>Skullywag</author>
-	<targetVersion>0.14.1249</targetVersion>
+	<name>ExtendedStorageFluffy</name>
+	<author>Skullywag - auto sort by Fluffy</author>
+	<targetVersion>0.16.1393</targetVersion>
 	<description>Adds additional storage buildings that multi stack items.</description>
 </ModMetaData>

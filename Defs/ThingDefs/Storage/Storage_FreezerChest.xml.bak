@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase" Class="ExtendedStorage.ESdef">
+  <ExtendedStorage.ESdef ParentName="BuildingBase">
     <defName>Freezer_Chest</defName>
     <label>Freezer chest</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -78,6 +78,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ThingDef>
+  </ExtendedStorage.ESdef>
 
 </Buildings>

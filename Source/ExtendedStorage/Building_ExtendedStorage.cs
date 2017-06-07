@@ -196,9 +196,9 @@ namespace ExtendedStorage
         }
         
 
-        public override void SpawnSetup(Map map)
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
-            base.SpawnSetup(map);
+            base.SpawnSetup(map, respawningAfterLoad);
             this.maxStorage = ((ESdef)this.def).maxStorage;
             List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList<IntVec3>();
             this.inputSlot = list[0];
@@ -311,8 +311,8 @@ namespace ExtendedStorage
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.LookDef<ThingDef>(ref _storedThingDef, "storedThingDef" );
-            Scribe_Deep.LookDeep( ref userSettings, "userSettings" );
+            Scribe_Defs.Look<ThingDef>(ref _storedThingDef, "storedThingDef" );
+            Scribe_Deep.Look( ref userSettings, "userSettings" );
             
             // we need to re-apply our callback on the userSettings after load.
             // in addition, we need some migration code for handling mid-save upgrades.

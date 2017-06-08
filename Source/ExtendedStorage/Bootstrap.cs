@@ -6,7 +6,6 @@ using Harmony;
 
 namespace ExtendedStorage
 {
-    [StaticConstructorOnStartup]
     class Bootstrap : Def
     {
         private const BindingFlags UniversalBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;

@@ -2,29 +2,30 @@
 using System.Reflection;
 using Verse;
 using RimWorld;
+using Harmony;
 
 namespace ExtendedStorage
 {
+    [StaticConstructorOnStartup]
     class Bootstrap : Def
     {
-        // CommunityCoreLibrary.DetourInjector
         private const BindingFlags UniversalBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
         static Bootstrap()
         {
             {
-                MethodInfo method1= typeof(Thing).GetMethod("SpawnSetup", BindingFlags.Instance | BindingFlags.Public);
-                MethodInfo method2 = typeof(_Thing_ExtendedStorage).GetMethod("_SpawnSetup", BindingFlags.Instance | BindingFlags.NonPublic);
-                Log.Message("Attempting detour from " + method1 + "to " + method2);
-                if (!Detours.TryDetourFromTo(method1, method2))
+                try
                 {
-                    Log.Error("Extended Storage Detour failed");
-                    return;
+                    MethodInfo method1 = typeof(Thing).GetMethod("SpawnSetup", BindingFlags.Instance | BindingFlags.Public);
+                    MethodInfo transpiler = typeof(Patches).GetMethod("Transpiler");
+                    HarmonyInstance.Create("com.extendedstorage.patches").Patch(method1, null, null, new HarmonyMethod(transpiler));
+                    Log.Message("Extended Storage :: Harmony patch successful (" + method1 + ") Transpiler (gets rid of the unnecessary stack count truncation)");
                 }
-                Log.Message("Extended Storage Detour Successful");
+                catch(Exception ex)
+                {
+                    Log.Error("Extended Storage :: Caught exception: " + ex);
+                }
             }
-
-            Assembly Assembly_CSharp = Assembly.Load("Assembly-CSharp.dll");
         }
     }
 }

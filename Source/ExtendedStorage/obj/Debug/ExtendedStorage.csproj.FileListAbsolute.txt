@@ -110,3 +110,15 @@ C:\Users\mjsku\Desktop\RimWorldAlpha16Win\RimWorld1393Win\Mods\ExtendedStorage -
 \\MAIN-RIG\SteamRimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\obj\Debug\ExtendedStorage.csprojResolveAssemblyReference.cache
 \\MAIN-RIG\SteamRimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\obj\Debug\ExtendedStorage.dll
 \\MAIN-RIG\SteamRimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\obj\Debug\ExtendedStorage.pdb
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\ExtendedStorage.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\ExtendedStorage.pdb
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\0Harmony.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\Assembly-CSharp.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\UnityEngine.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\NAudio.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\NVorbis.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\bin\Debug\UnityEngine.xml
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\obj\Debug\ExtendedStorage.csprojResolveAssemblyReference.cache
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\obj\Debug\ExtendedStorage.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\ExtendedStorage-master\Source\ExtendedStorage\obj\Debug\ExtendedStorage.pdb

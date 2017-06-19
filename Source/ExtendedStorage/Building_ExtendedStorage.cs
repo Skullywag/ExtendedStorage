@@ -15,6 +15,8 @@ namespace ExtendedStorage
         private int maxStorage = 1000;
         private ThingDef _storedThingDef;
 
+        public IntVec3 OutputSlot { get { return outputSlot; } }
+
         private ThingDef StoredThingDef
         {
             get { return _storedThingDef; }
@@ -250,7 +252,6 @@ namespace ExtendedStorage
                 Thing storedThingAtInput = this.StoredThingAtInput;
                 if (storedThingAtInput != null)
                 {
-                    Log.Error("shouldnt be here");
                     this.StoredThingDef = storedThingAtInput.def;
                     Thing thing = ThingMaker.MakeThing(this.StoredThingDef, storedThingAtInput.Stuff);
                     thing.stackCount = storedThingAtInput.stackCount;

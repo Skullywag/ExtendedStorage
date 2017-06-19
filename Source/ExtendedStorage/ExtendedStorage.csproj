@@ -32,8 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\Mod_Tools\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>C:\Users\mjsku\Desktop\RimWorldAlpha16Win\RimWorld1393Win\RimWorld1393Win_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\RimWorldWin_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,13 +45,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>C:\Users\mjsku\Desktop\RimWorldAlpha16Win\RimWorld1393Win\RimWorld1393Win_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\RimWorldWin_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Building_ExtendedStorage.cs" />
-    <Compile Include="Detours.cs" />
     <Compile Include="ExtendedStorage.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

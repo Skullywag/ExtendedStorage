@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>ExtendedStorageFluffy</name>
-	<author>Skullywag - auto sort by Fluffy</author>
-	<targetVersion>0.16.1393</targetVersion>
-	<description>Adds additional storage buildings that multi stack items.</description>
+	<name>ExtendedStorageFluffyHarmonised</name>
+	<author>Skullywag, Fluffy, spdskatr</author>
+	<targetVersion>0.17.1554</targetVersion>
+	<description>Adds additional storage buildings that multi stack items. Auto sort by Fluffy, Harmony by spdskatr</description>
 </ModMetaData>

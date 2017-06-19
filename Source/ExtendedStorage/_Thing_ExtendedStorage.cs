@@ -34,7 +34,8 @@ namespace ExtendedStorage
         }
         public static bool VerifyThingShouldNotBeTruncated(Thing t, Map map)
         {
-            return t.Position.GetFirstBuilding(map) is Building_ExtendedStorage b && b.OutputSlot == t.Position;
+            var b = t.Position.GetFirstBuilding(map) as Building_ExtendedStorage;
+            return b != null && b.OutputSlot == t.Position;
         }
     }
 }

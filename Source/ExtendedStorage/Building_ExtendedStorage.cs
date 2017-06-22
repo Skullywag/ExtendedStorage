@@ -206,6 +206,40 @@ namespace ExtendedStorage
             this.inputSlot = list[0];
             this.outputSlot = list[1];
         }
+
+        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
+        {
+            foreach (IntVec3 current in GenRadial.RadialCellsAround(this.outputSlot, 20, false))
+            {
+                if (current.Standable(Map)) {
+                    if (StoredThing == null)
+                    {
+                        // Nothing happens
+                        break;
+                    }
+                    else
+                    {
+                        // Stuff is stored so lets split it and splurge it everywhere.
+                        Thing storedThing = this.StoredThing;
+                        Thing thing = ThingMaker.MakeThing(storedThing.def, storedThing.Stuff);
+                        if (storedThing.stackCount > storedThing.def.stackLimit)
+                        {
+                            storedThing.stackCount -= storedThing.def.stackLimit;
+                            thing.stackCount = storedThing.def.stackLimit;
+                        }
+                        else
+                        {
+                            thing.stackCount = storedThing.stackCount;
+                            storedThing.Destroy();
+                        }
+
+                        GenSpawn.Spawn(thing, current, Map);
+                    }
+                }
+            }
+            base.Destroy(mode);
+        }
+
         public override void Tick()
         {
             base.Tick();

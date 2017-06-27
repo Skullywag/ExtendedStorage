@@ -142,3 +142,12 @@ C:\Users\mjsku\Desktop\RimWorldAlpha17bWin\RimWorld1557Win\Mods\ExtendedStorage\
 C:\Users\mjsku\Desktop\RimWorldAlpha17bWin\RimWorld1557Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.csprojResolveAssemblyReference.cache
 C:\Users\mjsku\Desktop\RimWorldAlpha17bWin\RimWorld1557Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.dll
 C:\Users\mjsku\Desktop\RimWorldAlpha17bWin\RimWorld1557Win\Mods\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.pdb
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\bin\Debug\ExtendedStorage.dll
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\bin\Debug\ExtendedStorage.pdb
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\bin\Debug\Assembly-CSharp-firstpass.dll
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\bin\Debug\NAudio.dll
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\bin\Debug\NVorbis.dll
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\bin\Debug\UnityEngine.xml
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.csprojResolveAssemblyReference.cache
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.dll
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\obj\Debug\ExtendedStorage.pdb

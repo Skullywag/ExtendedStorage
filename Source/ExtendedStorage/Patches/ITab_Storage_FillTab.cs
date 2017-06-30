@@ -60,6 +60,23 @@ namespace ExtendedStorage
             }
         }
 
+
+        /// <remarks>
+        /// Changes the IL code so the patched method beginning is functionally changed from
+        /// <code>
+        ///     IStoreSettingsParent selStoreSettingsParent = this.SelStoreSettingsParent;
+        ///     StorageSettings settings = selStoreSettingsParent.GetStoreSettings();
+        ///     ...
+        /// </code>
+        /// to
+        /// <code>
+        ///     IStoreSettingsParent selStoreSettingsParent;
+        ///     StorageSettings settings = ITab_Storage_FillTab.GetSettings(this, out selStoreSettingsParent);
+        ///     ...
+        /// </code>
+        /// (with some IL Opcode padding &amp; minor Harmony witchery)
+        /// </remarks>
+        /// <seealso cref="GetSettings"/>
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr, ILGenerator ilgen)
         {
             /*  Don't completely replace the base implementation. Only change the absolutely bare minimum.

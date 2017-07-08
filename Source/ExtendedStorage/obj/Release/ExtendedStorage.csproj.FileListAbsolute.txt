@@ -1,0 +1,3 @@
+D:\Projekte\RimWorld\ExtendedStorage\Assemblies\ExtendedStorage.dll
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\obj\Release\ExtendedStorage.csprojResolveAssemblyReference.cache
+D:\Projekte\RimWorld\ExtendedStorage\Source\ExtendedStorage\obj\Release\ExtendedStorage.dll

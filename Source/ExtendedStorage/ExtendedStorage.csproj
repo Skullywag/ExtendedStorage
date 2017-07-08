@@ -55,8 +55,9 @@
     <Compile Include="Building_ExtendedStorage.cs" />
     <Compile Include="ExtendedStorage.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
+    <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="_Thing_ExtendedStorage.cs" />
+    <Compile Include="Patches\Thing_SpawnSetup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\OmniShields.dll" />

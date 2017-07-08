@@ -14,6 +14,7 @@ namespace ExtendedStorage
         private IntVec3 outputSlot;
         private int maxStorage = 1000;
         private ThingDef _storedThingDef;
+        private Action queuedTickAction;
 
         public IntVec3 OutputSlot { get { return outputSlot; } }
 
@@ -30,51 +31,22 @@ namespace ExtendedStorage
         public StorageSettings userSettings;
         public Thing StoredThingAtInput
         {
-            get
-            {
-                if (this.StoredThingDef != null)
-                {
-                    List<Thing> list = (
-                        from t in Find.VisibleMap.thingGrid.ThingsAt(this.inputSlot)
-                        where t.def == this.StoredThingDef
-                        select t).ToList<Thing>();
-                    if (list.Count <= 0)
-                    {
-                        return null;
-                    }
-                    return list.First<Thing>();
-                }
-                else
-                {
-                    List<Thing> list2 = (
-                        from t in Find.VisibleMap.thingGrid.ThingsAt(this.inputSlot)
-                        where this.slotGroup.Settings.AllowedToAccept(t)
-                        select t).ToList<Thing>();
-                    if (list2.Count <= 0)
-                    {
-                        return null;
-                    }
-                    return list2.First<Thing>();
-                }
+            get {
+                return Find.VisibleMap.thingGrid.ThingsAt(this.inputSlot)
+                           .FirstOrDefault(
+                               this.StoredThingDef != null
+                                   ? (Func<Thing, bool>) (t => t.def == StoredThingDef)
+                                   : t => slotGroup.Settings.AllowedToAccept(t));
             }
         }
         public Thing StoredThing
         {
             get
             {
-                if (this.StoredThingDef == null)
-                {
-                    return null;
-                }
-                List<Thing> list = (
-                    from t in Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
-                    where t.def == this.StoredThingDef
-                    select t).ToList<Thing>();
-                if (list.Count <= 0)
-                {
-                    return null;
-                }
-                return list.First<Thing>();
+                return this.StoredThingDef == null
+                    ? null
+                    : Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
+                          .FirstOrDefault(t => t.def == StoredThingDef);
             }
         }
 
@@ -115,7 +87,7 @@ namespace ExtendedStorage
             if ( Building_GetGizmos == null )
             {
                 // http://stackoverflow.com/a/32562464
-                var ptr = typeof( Building ).GetMethod( "GetGizmos", BindingFlags.Instance | BindingFlags.Public ).MethodHandle.GetFunctionPointer();
+                var ptr = typeof( Building ).GetMethod( nameof(Building.GetGizmos), BindingFlags.Instance | BindingFlags.Public ).MethodHandle.GetFunctionPointer();
                 Building_GetGizmos = (Func<IEnumerable<Gizmo>>)Activator.CreateInstance( typeof( Func<IEnumerable<Gizmo>> ), this, ptr );
             }
 
@@ -160,9 +132,13 @@ namespace ExtendedStorage
             // Instead, just copy the filter over, resetting it.
             settings.filter.CopyAllowancesFrom( userSettings.filter );
 
-            // if our current thingdef is not null and still allowed, re-apply the constraint to the filter.
-            if ( StoredThingDef != null && settings.filter.Allows( StoredThingDef ) )
-                Notify_StoredThingDefChanged( StoredThingDef );
+            // if our current thingdef is not null and still allowed, re-apply the constraint to the filter
+            if (StoredThingDef != null && settings.filter.Allows(StoredThingDef))
+                Notify_StoredThingDefChanged(StoredThingDef);
+            else {
+                TryUnstackStoredItems();
+                StoredThingDef = null;
+            }
         }
 
         public void Notify_StoredThingDefChanged( ThingDef newDef )
@@ -207,44 +183,114 @@ namespace ExtendedStorage
             this.outputSlot = list[1];
         }
 
-        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
-        {
-            foreach (IntVec3 current in GenRadial.RadialCellsAround(this.outputSlot, 20, false))
-            {
-                if (current.Standable(Map)) {
-                    if (StoredThing == null)
-                    {
-                        // Nothing happens
-                        break;
-                    }
-                    else
-                    {
-                        // Stuff is stored so lets split it and splurge it everywhere.
-                        Thing storedThing = this.StoredThing;
-                        Thing thing = ThingMaker.MakeThing(storedThing.def, storedThing.Stuff);
-                        if (storedThing.stackCount > storedThing.def.stackLimit)
-                        {
-                            storedThing.stackCount -= storedThing.def.stackLimit;
-                            thing.stackCount = storedThing.def.stackLimit;
-                        }
-                        else
-                        {
-                            thing.stackCount = storedThing.stackCount;
-                            storedThing.Destroy();
-                        }
+        public override void Destroy(DestroyMode mode = DestroyMode.Vanish) {
+            TrySplurgeStoredItems();
+            base.Destroy(mode);
+        }
 
-                        GenSpawn.Spawn(thing, current, Map);
+        internal void TrySplurgeStoredItems() {
+            Thing storedThing = StoredThing;
+
+            if (storedThing == null || storedThing.stackCount <= storedThing.def.stackLimit)
+                return;
+
+            SplurgeThings(new[] {storedThing}, outputSlot);       
+        }
+
+        /// <summary>
+        /// Tries extracting all elements from <paramref name="things"/> around <paramref name="center" /> in stacks no larger than each 
+        /// thing's def's <see cref="ThingDef.stackLimit"/>.
+        /// </summary>
+        /// <returns>
+        /// All extracted thing stacks
+        /// </returns>
+        private IEnumerable<Thing> SplurgeThings(IEnumerable<Thing> things, IntVec3 center, bool forceSplurge = false) {
+            List<Thing> result = new List<Thing>();
+
+            using (IEnumerator<IntVec3> cellEnumerator = GenRadial.RadialCellsAround(this.outputSlot, 20, false).GetEnumerator())
+            using (IEnumerator<Thing> thingEnumerator = things.GetEnumerator()) {
+                while (true) {
+                    if (!thingEnumerator.MoveNext())            
+                        goto finished;                              // no more things
+
+                    Thing thing = thingEnumerator.Current;
+
+                    while (!thing.DestroyedOrNull() && (forceSplurge || thing.stackCount > thing.def.stackLimit)) {
+                        IntVec3 availableCell;
+                        if (!TryGetNext(cellEnumerator, c => c.Standable(Map), out availableCell)) {
+                            Log.Warning($"Ran out of cells to splurge {thing.LabelCap} - there might be issues on save/reload.");
+                            goto finished;                          // no more cells
+                        }
+                        result.Add(SplitOfStackInto(thing, availableCell));
                     }
                 }
             }
-            base.Destroy(mode);
+
+            finished:
+            return result;
         }
+
+
+        /// <summary>
+        /// Removes up to <see cref="ThingDef.stackLimit"/> from <paramref name="existingThing"/> and creates a
+        /// new stack of corresponding size in <paramref name="targetLocation"/>.
+        /// </summary>
+        /// <returns>Newly created stack</returns>
+        private Thing SplitOfStackInto(Thing existingThing, IntVec3 targetLocation) {
+            Thing createdThing = ThingMaker.MakeThing(existingThing.def, existingThing.Stuff);
+            if (existingThing.stackCount > existingThing.def.stackLimit) {
+                existingThing.stackCount -= existingThing.def.stackLimit;
+                createdThing.stackCount = existingThing.def.stackLimit;
+            }
+            else {
+                createdThing.stackCount = existingThing.stackCount;
+                existingThing.Destroy();
+            }
+
+            return GenSpawn.Spawn(createdThing, targetLocation, Map);
+        }
+
+
+        // we can't really dump items immediately - otherwise typical use scenarios like "clear all, reselect X" would dump items immediately
+        private void TryUnstackStoredItems() {
+            Thing storedThing = StoredThing;
+
+            if (storedThing == null)
+                return;
+
+            List<Thing> thingsToSplurge = new List<Thing>();
+
+            // IMMEDIATELY split one big stack into n stacks of stackLimit size each.
+            while (storedThing.stackCount > storedThing.def.stackLimit) {
+                thingsToSplurge.Add(SplitOfStackInto(storedThing, outputSlot));
+            }
+
+            // queue splurge action for next tick - action checks *on invocation* if queued thing to splurge is allowed again, skips those
+            queuedTickAction += () => SplurgeThings(thingsToSplurge.Where(t => t.def != StoredThingDef), outputSlot, true);                                                               
+        }
+
+
+        public static bool TryGetNext<T>(IEnumerator<T> e, Predicate<T> predicate, out T value) {
+            while (true) {
+                if (!e.MoveNext()) {
+                    value = default(T);
+                    return false;
+                }
+                value = e.Current;
+                if (predicate(value))
+                    return true;
+            }
+        }
+
 
         public override void Tick()
         {
             base.Tick();
-            if ( this.IsHashIntervalTick( 10 ) )
-            {
+            if ( this.IsHashIntervalTick( 10 ) ) {
+
+                queuedTickAction?.Invoke();
+                queuedTickAction = null;
+
                 this.CheckOutputSlot();
                 if (!this.StorageFull)
                 {

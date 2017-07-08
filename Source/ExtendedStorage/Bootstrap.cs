@@ -13,11 +13,18 @@ namespace ExtendedStorage
         static Bootstrap()
         {
             {
+<<<<<<< HEAD
                 try
                 {
                     HarmonyInstance instance = HarmonyInstance.Create("com.extendedstorage.patches");
                     instance.PatchAll(Assembly.GetExecutingAssembly());
                     Log.Message($"Extended Storage :: Harmony patches successful");               
+=======
+                try
+                {
+                    HarmonyInstance.Create("com.extendedstorage.patches").PatchAll(Assembly.GetExecutingAssembly());
+                    Log.Message("Extended Storage :: Harmony patches successfull");
+>>>>>>> itemsplurge
                 }
                 catch(Exception ex)
                 {

@@ -56,15 +56,19 @@
     <Compile Include="Building_ExtendedStorage.cs" />
     <Compile Include="ExtendedStorage.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
+    <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="_Thing_ExtendedStorage.cs" />
+    <Compile Include="Patches\Thing_SpawnSetup.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+<<<<<<< HEAD
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+=======
+>>>>>>> clothingrack-menu
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

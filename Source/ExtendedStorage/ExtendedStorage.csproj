@@ -58,6 +58,7 @@
     <Compile Include="ITab_Storage_UserSettings.cs" />
     <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />
+    <Compile Include="Patches\MinifyUtility_MakeMinified.cs" />
     <Compile Include="Patches\Thing_SpawnSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

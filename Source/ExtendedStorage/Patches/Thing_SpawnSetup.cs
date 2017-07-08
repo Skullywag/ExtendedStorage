@@ -15,7 +15,7 @@ namespace ExtendedStorage
 {
 
     [HarmonyPatch(typeof(Thing), nameof(Thing.SpawnSetup))]
-    class Patches
+    class Thing_SpawnSetup
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -29,7 +29,7 @@ namespace ExtendedStorage
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Call, typeof(Patches).GetMethod(nameof(VerifyThingShouldNotBeTruncated)));
+                    yield return new CodeInstruction(OpCodes.Call, typeof(Thing_SpawnSetup).GetMethod(nameof(VerifyThingShouldNotBeTruncated)));
                     yield return new CodeInstruction(OpCodes.Brtrue, instruction.operand);
                 }
             }

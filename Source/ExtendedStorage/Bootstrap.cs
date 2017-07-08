@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Verse;
 using RimWorld;
@@ -17,7 +17,7 @@ namespace ExtendedStorage
                 {
                     HarmonyInstance instance = HarmonyInstance.Create("com.extendedstorage.patches");
                     instance.PatchAll(Assembly.GetExecutingAssembly());
-                    Log.Message($"Extended Storage :: Harmony patches successful");
+                    Log.Message($"Extended Storage :: Harmony patches successful");               
                 }
                 catch(Exception ex)
                 {

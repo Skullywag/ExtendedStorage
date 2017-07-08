@@ -61,22 +61,7 @@
     <Compile Include="Patches\Thing_SpawnSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="bin\Debug\OmniShields.dll" />
-    <Content Include="bin\Debug\OmniShields.pdb" />
-    <Content Include="obj\Debug\OmniShields.dll" />
-    <Content Include="obj\Debug\OmniShields.pdb" />
-    <Content Include="obj\Debug\OmniShieldsDLL.csproj.FileListAbsolute.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="obj\Debug\OmniShieldsDLL.csprojResolveAssemblyReference.cache" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Release\" />
-    <Folder Include="obj\Debug\TempPE\" />
-    <Folder Include="Source-DLLs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

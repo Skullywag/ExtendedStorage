@@ -13,6 +13,8 @@ using System.Reflection.Emit;
 
 namespace ExtendedStorage
 {
+
+    [HarmonyPatch(typeof(Thing), nameof(Thing.SpawnSetup))]
     class Patches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

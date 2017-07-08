@@ -5,7 +5,7 @@
 
           Currently not referenced outside this file
       -->
-		  <RimworldInstallDir>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\</RimworldInstallDir>	
+		  <RimworldInstallDir>E:\Spiele\SteamApps\SteamApps\common\Rimworld\</RimworldInstallDir>	
 
       <!-- 
           If you're developing on a non windows machine, change to correct path 

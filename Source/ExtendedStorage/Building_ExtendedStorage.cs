@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
+
 namespace ExtendedStorage
 {
     public class Building_ExtendedStorage : Building_Storage
@@ -194,7 +196,8 @@ namespace ExtendedStorage
             if (storedThing == null || storedThing.stackCount <= storedThing.def.stackLimit)
                 return;
 
-            SplurgeThings(new[] {storedThing}, outputSlot);       
+            SplurgeThings(new[] {storedThing}, outputSlot);
+            SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, base.Map, false));
         }
 
         /// <summary>
@@ -205,6 +208,8 @@ namespace ExtendedStorage
         /// All extracted thing stacks
         /// </returns>
         private IEnumerable<Thing> SplurgeThings(IEnumerable<Thing> things, IntVec3 center, bool forceSplurge = false) {
+            // TODO: think about using built in logic - check ActriveDropPod.PodOpen & GenPlace.TryPlaceThing
+
             List<Thing> result = new List<Thing>();
 
             using (IEnumerator<IntVec3> cellEnumerator = GenRadial.RadialCellsAround(this.outputSlot, 20, false).GetEnumerator())
@@ -241,8 +246,7 @@ namespace ExtendedStorage
             if (existingThing.stackCount > existingThing.def.stackLimit) {
                 existingThing.stackCount -= existingThing.def.stackLimit;
                 createdThing.stackCount = existingThing.def.stackLimit;
-            }
-            else {
+            } else {
                 createdThing.stackCount = existingThing.stackCount;
                 existingThing.Destroy();
             }
@@ -266,7 +270,10 @@ namespace ExtendedStorage
             }
 
             // queue splurge action for next tick - action checks *on invocation* if queued thing to splurge is allowed again, skips those
-            queuedTickAction += () => SplurgeThings(thingsToSplurge.Where(t => t.def != StoredThingDef), outputSlot, true);                                                               
+            queuedTickAction += () => {
+                                    SplurgeThings(thingsToSplurge.Where(t => t.def != StoredThingDef), outputSlot, true);
+                                    SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, base.Map, false));
+                                };
         }
 
 

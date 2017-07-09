@@ -422,6 +422,7 @@ namespace ExtendedStorage
                 {
                     Trace($"Splitting of {spaceRamaining}");
                     moved = input.SplitOff(spaceRamaining);
+                    moved.HitPoints = input.HitPoints;
                     GenSpawn.Spawn(moved, this.outputSlot, Map);
                 }
                 outputSlot.GetSlotGroup(this.Map)?.parent?.Notify_ReceivedThing(moved);

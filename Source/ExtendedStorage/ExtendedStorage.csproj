@@ -60,6 +60,7 @@
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />
     <Compile Include="Patches\MinifyUtility_MakeMinified.cs" />
     <Compile Include="Patches\Thing_SpawnSetup.cs" />
+    <Compile Include="Patches\Thing_GUIOverlay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

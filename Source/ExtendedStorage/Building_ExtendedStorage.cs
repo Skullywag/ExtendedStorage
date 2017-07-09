@@ -1,6 +1,7 @@
 ﻿using System;
 using RimWorld;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,7 +21,7 @@ namespace ExtendedStorage
 
         public IntVec3 OutputSlot { get { return outputSlot; } }
 
-        private ThingDef StoredThingDef
+        internal ThingDef StoredThingDef
         {
             get { return _storedThingDef; }
             set
@@ -41,14 +42,15 @@ namespace ExtendedStorage
                                    : t => slotGroup.Settings.AllowedToAccept(t));
             }
         }
-        public Thing StoredThing
+        public IEnumerable<Thing> StoredThings
         {
             get
             {
-                return this.StoredThingDef == null
-                    ? null
-                    : Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot)
-                          .FirstOrDefault(t => t.def == StoredThingDef);
+                if (this.StoredThingDef == null)
+                {
+                    return Enumerable.Empty<Thing>();
+                }
+                return Find.VisibleMap.thingGrid.ThingsAt(this.outputSlot).Where(t => t.def == StoredThingDef);
             }
         }
 
@@ -56,7 +58,7 @@ namespace ExtendedStorage
         {
             get
             {
-                return this.StoredThingDef != null && this.StoredThing != null && this.StoredThing.stackCount >= this.ApparentMaxStorage;
+                return this.StoredThingDef != null &&  StoredThings.Sum(t => t.stackCount) >= this.ApparentMaxStorage;
             }
         }
 
@@ -191,12 +193,12 @@ namespace ExtendedStorage
         }
 
         internal void TrySplurgeStoredItems() {
-            Thing storedThing = StoredThing;
+            IEnumerable<Thing> storedThings = StoredThings;
 
-            if (storedThing == null || storedThing.stackCount <= storedThing.def.stackLimit)
+            if (storedThings == null)
                 return;
 
-            SplurgeThings(new[] {storedThing}, outputSlot);
+            SplurgeThings(storedThings, outputSlot);
             SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, base.Map, false));
         }
 
@@ -257,17 +259,7 @@ namespace ExtendedStorage
 
         // we can't really dump items immediately - otherwise typical use scenarios like "clear all, reselect X" would dump items immediately
         private void TryUnstackStoredItems() {
-            Thing storedThing = StoredThing;
-
-            if (storedThing == null)
-                return;
-
-            List<Thing> thingsToSplurge = new List<Thing>();
-
-            // IMMEDIATELY split one big stack into n stacks of stackLimit size each.
-            while (storedThing.stackCount > storedThing.def.stackLimit) {
-                thingsToSplurge.Add(SplitOfStackInto(storedThing, outputSlot));
-            }
+            List<Thing> thingsToSplurge = StoredThings.ToList();
 
             // queue splurge action for next tick - action checks *on invocation* if queued thing to splurge is allowed again, skips those
             queuedTickAction += () => {
@@ -289,6 +281,32 @@ namespace ExtendedStorage
             }
         }
 
+        public override void DrawGUIOverlay() {
+            base.DrawGUIOverlay();
+
+            Color labelColor = new Color(1f, 1f, 0.5f, 0.75f);  // yellowish white for our total stack counts - default is GenMapUI.DefaultThingLabelColor
+
+            if (StoredThingDef != null) {
+                var items = StoredThings.ToList();
+
+                var qualityCategories = items.Select(t => {
+                                                         QualityCategory c;
+                                                         return t.TryGetQuality(out c) ? c : (QualityCategory?) null;
+                                                     })
+                                             .Where(c => c != null)
+                                             .Select(c => c.Value)
+                                             .Distinct()
+                                             .OrderBy(c => c)
+                                             .ToArray();
+                
+                string label = qualityCategories.Length != 0
+                    ? $"({items.Count}/{ApparentMaxStorage}): {qualityCategories[0].GetLabelShort()}{(qualityCategories.Length > 1 ? "+" : null)}"
+                    : $"\u2211 { items.Sum(t => t.stackCount).ToStringCached()}" ;
+
+
+                GenMapUI.DrawThingLabel(items.First(), label, labelColor);            
+            }
+        }
 
         public override void Tick()
         {
@@ -298,88 +316,55 @@ namespace ExtendedStorage
                 queuedTickAction?.Invoke();
                 queuedTickAction = null;
 
-                this.CheckOutputSlot();
+                this.CondenseOutputSlot();
                 if (!this.StorageFull)
                 {
                     this.TryMoveItem();
                 }
             }
         }
-        private void CheckOutputSlot()
+        private void CondenseOutputSlot()
         {
-            if (this.StoredThingDef == null)
-            {
-                return;
-            }
-            if (this.StoredThing == null)
-            {
-                this.StoredThingDef = null;
-                return;
-            }
-            List<Thing> list = (
-                from t in Map.thingGrid.ThingsAt(this.outputSlot)
-                where t.def == this.StoredThingDef
-                orderby t.stackCount
-                select t).ToList<Thing>();
-            if (list.Count > 1 && !StoredThingDef.IsApparel)
-            {
-                Thing thing = ThingMaker.MakeThing(this.StoredThingDef, list.First<Thing>().Stuff);
-                foreach (Thing current in list)
-                {
-                    thing.stackCount += current.stackCount;
-                    current.Destroy(0);
-                }
-                GenSpawn.Spawn(thing, this.outputSlot, Map);
-            }
+            // no longer needed - we store multi stacks.
         }
+
         private void TryMoveItem()
         {
-            if (this.StoredThingDef == null)
-            {
-                Thing storedThingAtInput = this.StoredThingAtInput;
-                if (storedThingAtInput != null)
-                {
-                    this.StoredThingDef = storedThingAtInput.def;
-                    Thing thing = ThingMaker.MakeThing(this.StoredThingDef, storedThingAtInput.Stuff);
-                    thing.stackCount = storedThingAtInput.stackCount;
-                    storedThingAtInput.Destroy(0);
-                    GenSpawn.Spawn(thing, this.outputSlot, Map);
-                }
+            Thing input = this.StoredThingAtInput;
+            if (input == null)
                 return;
-            }
-            Thing storedThingAtInput2 = this.StoredThingAtInput;
-            Thing storedThing = this.StoredThing;
-            if (storedThingAtInput2 != null)
-            {
-                if (storedThing != null)
-                {
-                    int a = this.ApparentMaxStorage - storedThing.stackCount;
-                    if (StoredThingDef.IsApparel)
-                    {
-                        storedThingAtInput2.Position = this.outputSlot;
-                        SlotGroup slotGroup = outputSlot.GetSlotGroup(this.Map);
-                        if (slotGroup != null && slotGroup.parent != null)
-                        {
-                            slotGroup.parent.Notify_ReceivedThing(storedThingAtInput2);
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        int num = Mathf.Min(a, storedThingAtInput2.stackCount);
-                        storedThing.stackCount += num;
-                        storedThingAtInput2.stackCount -= num;
-                        if (storedThingAtInput2.stackCount <= 0)
-                        {
-                            storedThingAtInput2.Destroy(0);
-                        }
-                        return;
-                    }
+
+            ThingDef outputDef = this.StoredThingDef;
+
+            if ((outputDef == null && settings.filter.Allows(input)) || (input.def == outputDef)) {
+                // think about building as ThingOwner - can contents still be accessed then?
+
+                Trace($"Trying to move {input} with output def {outputDef}");
+
+                int spaceRamaining = outputDef == null
+                    ? input.stackCount
+                    : ApparentMaxStorage - StoredThings.Sum(t => t.stackCount);
+                Trace($"remaining capacity: {spaceRamaining}");
+
+                Thing moved;
+                if (spaceRamaining >= input.stackCount) {
+                    Trace("Moving input over");
+                    moved = input;
+                    input.Position = outputSlot;
                 }
-                Thing thing2 = ThingMaker.MakeThing(storedThingAtInput2.def, storedThingAtInput2.Stuff);
-                GenSpawn.Spawn(thing2, this.outputSlot, Map);
-                storedThingAtInput2.Destroy(0);
+                else {
+                    Trace($"Splitting of {spaceRamaining}");
+                    moved = input.SplitOff(spaceRamaining);
+                    GenSpawn.Spawn(moved, this.outputSlot, Map);
+                }
+                outputSlot.GetSlotGroup(this.Map)?.parent?.Notify_ReceivedThing(moved);
+                StoredThingDef = moved.def;
             }
+        }
+
+        [Conditional("TRACE")]
+        private void Trace(string s) {
+            Log.Message(s);
         }
 
         private FieldInfo _settingsChangedCallback_FI = typeof( ThingFilter ).GetField( "settingsChangedCallback",

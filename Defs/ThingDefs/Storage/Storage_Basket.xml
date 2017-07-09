@@ -12,6 +12,7 @@
     <repairEffect>Repair</repairEffect>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
     <filthLeaving>BuildingRubble</filthLeaving>
+    <drawGUIOverlay>true</drawGUIOverlay>
   </ThingDef>
 
   <!--============================== Storage ===========================-->

@@ -108,7 +108,8 @@ namespace ExtendedStorage
                                    defaultDesc = "ExtendedStorage.Rename".Translate(this.def.label),
                                    defaultLabel = "Rename".Translate(),
                                    activateSound = SoundDef.Named("Click"),
-                                   action = delegate { Find.WindowStack.Add(new Dialog_Rename(this)); }
+                                   action = delegate { Find.WindowStack.Add(new Dialog_Rename(this)); },
+                                   groupKey = 942608684                 // guaranteed to be random - https://xkcd.com/221/
                                };
             yield return a;
 
@@ -199,6 +200,8 @@ namespace ExtendedStorage
             List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList<IntVec3>();
             this.inputSlot = list[0];
             this.outputSlot = list[1];
+            if (this.label == null || this.label.Trim().Length == 0)
+                this.label = base.def.label;            
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish) {

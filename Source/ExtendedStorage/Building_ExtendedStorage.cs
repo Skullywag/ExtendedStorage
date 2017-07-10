@@ -12,15 +12,13 @@ namespace ExtendedStorage
 {
     public class Building_ExtendedStorage : Building_Storage
     {
-        private readonly FieldInfo _settingsChangedCallback_FI = typeof(ThingFilter).GetField("settingsChangedCallback",
-                                                                                              BindingFlags.NonPublic |
-                                                                                              BindingFlags.Instance);
+        #region fields
 
-        private Graphic _gfxStoredThing;
+        internal Graphic _gfxStoredThing;
         private string _label;
 
         private ThingDef _storedThingDef;
-        private Thing _suppressedDrawCandidate;
+        internal Thing _suppressedDrawCandidate;
 
         private Func<IEnumerable<Gizmo>> Building_GetGizmos;
         private IntVec3 inputSlot;
@@ -29,6 +27,32 @@ namespace ExtendedStorage
         private Action queuedTickAction;
 
         public StorageSettings userSettings;
+
+        internal static Action<ThingFilter, Action> SetSettingsChanged;
+
+        #endregion
+
+        static Building_ExtendedStorage()
+        {
+            SetSettingsChanged = Access.GetFieldSetter<ThingFilter, Action>("settingsChangedCallback");
+        }
+
+
+        #region Properties
+
+        public bool AtCapacity => StoredThingTotal >= ApparentMaxStorage;
+
+        public int ApparentMaxStorage
+        {
+            get
+            {
+                if (StoredThingDef == null)
+                    return int.MaxValue;
+                if (StoredThingDef.smallVolume)
+                    return (int) (maxStorage/0.2f);
+                return maxStorage;
+            }
+        }
 
         public IntVec3 OutputSlot => outputSlot;
 
@@ -68,18 +92,54 @@ namespace ExtendedStorage
 
         public int StoredThingTotal => StoredThings.Sum(t => t.stackCount);
 
+        #endregion
 
-        public bool AtCapacity => StoredThingTotal >= ApparentMaxStorage;
+        #region Base overrides
 
-        public int ApparentMaxStorage
+        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
-            get
+            TrySplurgeStoredItems();
+            base.Destroy(mode);
+        }
+
+        public override void DrawGUIOverlay()
+        {
+            if (Find.CameraDriver.CurrentZoom != CameraZoomRange.Closest)
+                return;
+
+            Color labelColor = new Color(1f, 1f, 0.5f, 0.75f); // yellowish white for our total stack counts - default is GenMapUI.DefaultThingLabelColor
+
+            if (!string.IsNullOrEmpty(_label))
+                GenMapUI.DrawThingLabel(StoredThings.First(), _label, labelColor);
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref _storedThingDef, "storedThingDef");
+            Scribe_Deep.Look(ref userSettings, "userSettings");
+
+            // we need to re-apply our callback on the userSettings after load.
+            // in addition, we need some migration code for handling mid-save upgrades.
+            // todo: the migration part of this can be removed on the A17 update.
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (StoredThingDef == null)
-                    return int.MaxValue;
-                if (StoredThingDef.smallVolume)
-                    return (int) (maxStorage/0.2f);
-                return maxStorage;
+                // migration
+                if (userSettings == null)
+                {
+                    // create 'user' storage settings
+                    userSettings = new StorageSettings(this);
+
+                    // copy over previous filter/priority
+                    userSettings.filter.CopyAllowancesFrom(settings.filter);
+                    userSettings.Priority = settings.Priority;
+
+                    // apply currently stored logic
+                    Notify_StoredThingDefChanged();
+                }
+
+                // re-apply callback
+                SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged);
             }
         }
 
@@ -108,6 +168,26 @@ namespace ExtendedStorage
                 yield return gizmo;
         }
 
+        public override string GetInspectString()
+        {
+            StringBuilder inspectString = new StringBuilder();
+            inspectString.Append(base.GetInspectString());
+            inspectString.Append(GeneratedDefs.keyed.ExtendedStorage_CurrentlyStoring.Translate(StoredThingDef?.LabelCap ??
+                                                                                                GeneratedDefs.keyed.ExtendedStorage_Nothing.Translate()));
+            return inspectString.ToString();
+        }
+
+        public override void Notify_LostThing(Thing newItem)
+        {
+            base.Notify_LostThing(newItem);
+            Notify_SlotGroupItemsChanged();
+        }
+
+        public override void Notify_ReceivedThing(Thing newItem) {
+            base.Notify_ReceivedThing(newItem);
+            Notify_SlotGroupItemsChanged();
+        }
+
         public override void PostMake()
         {
             // create 'game' storage settings
@@ -121,8 +201,50 @@ namespace ExtendedStorage
                 userSettings.CopyFrom(def.building.defaultStorageSettings);
 
             // change callback to point to our custom logic
-            SetCallback(userSettings.filter, Notify_UserSettingsChanged);
+            SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged);
         }
+
+
+        public override void PostMapInit()
+        {
+            base.PostMapInit();
+
+
+            // old version might have been saved in an inconsistent state - force correct StoredThingDef
+            RecalculateStoredThingDef();
+            // old versions will have stored giant stacks
+            ChunkifyOutputSlot();
+
+            // can't do this in postmake, since stored stacks might not yet have been created
+            UpdateDrawAttributes();
+        }
+
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        {
+            base.SpawnSetup(map, respawningAfterLoad);
+            maxStorage = ((ESdef) def).maxStorage;
+            List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList();
+            inputSlot = list[0];
+            outputSlot = list[1];
+        }
+
+        public override void Tick()
+        {
+            base.Tick();
+            if (this.IsHashIntervalTick(10))
+            {
+                queuedTickAction?.Invoke();
+                queuedTickAction = null;
+
+                ChunkifyOutputSlot();
+
+                TryMoveItem();
+            }
+        }
+
+        #endregion
+
+        #region Notification handlers
 
         public void Notify_UserSettingsChanged()
         {
@@ -173,274 +295,21 @@ namespace ExtendedStorage
             UpdateDrawAttributes();
         }
 
-        public override string GetInspectString()
+        private void Notify_SlotGroupItemsChanged()
         {
-            StringBuilder inspectString = new StringBuilder();
-            inspectString.Append(base.GetInspectString());
-            inspectString.Append(GeneratedDefs.keyed.ExtendedStorage_CurrentlyStoring.Translate(StoredThingDef?.LabelCap ??
-                                                                                                GeneratedDefs.keyed.ExtendedStorage_Nothing.Translate()));
-            return inspectString.ToString();
+            var oldValue = _storedThingDef;
+
+            RecalculateStoredThingDef();
+
+            // Updates to StoredThingDef cascade to UpdateDrawAttributes() - only need to call that if no change occured
+            if (_storedThingDef == oldValue)
+                UpdateDrawAttributes();
         }
 
-
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
-        {
-            base.SpawnSetup(map, respawningAfterLoad);
-            maxStorage = ((ESdef) def).maxStorage;
-            List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList();
-            inputSlot = list[0];
-            outputSlot = list[1];
-        }
-
-        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
-        {
-            TrySplurgeStoredItems();
-            base.Destroy(mode);
-        }
-
-        internal void TrySplurgeStoredItems()
-        {
-            IEnumerable<Thing> storedThings = StoredThings;
-
-            if (storedThings == null)
-                return;
-
-            SplurgeThings(storedThings, outputSlot, true);
-            SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
-        }
+        #endregion
 
         /// <summary>
-        ///     Tries extracting all elements from <paramref name="things" /> around <paramref name="center" /> in stacks no larger
-        ///     than each
-        ///     thing's def's <see cref="ThingDef.stackLimit" />.
-        /// </summary>
-        /// <returns>
-        ///     All extracted thing stacks
-        /// </returns>
-        private IEnumerable<Thing> SplurgeThings(IEnumerable<Thing> things, IntVec3 center, bool forceSplurge = false)
-        {
-            // TODO: think about using built in logic - check ActriveDropPod.PodOpen & GenPlace.TryPlaceThing
-
-            List<Thing> result = new List<Thing>();
-
-            using (IEnumerator<IntVec3> cellEnumerator = GenRadial.RadialCellsAround(center, 20, false).GetEnumerator())
-            {
-                using (IEnumerator<Thing> thingEnumerator = things.GetEnumerator())
-                {
-                    while (true)
-                    {
-                        if (!thingEnumerator.MoveNext())
-                            goto finished; // no more things
-
-                        Thing thing = thingEnumerator.Current;
-
-                        while (!thing.DestroyedOrNull() && (forceSplurge || (thing.stackCount > thing.def.stackLimit)))
-                        {
-                            IntVec3 availableCell;
-                            if (!TryGetNext(cellEnumerator, c => c.Standable(Map), out availableCell))
-                            {
-                                Log.Warning($"Ran out of cells to splurge {thing.LabelCap} - there might be issues on save/reload.");
-                                goto finished; // no more cells
-                            }
-
-                            result.Add(SplitOfStackInto(thing, availableCell));
-                        }
-                    }
-                }
-            }
-
-            finished:
-            return result;
-        }
-
-        /// <summary>
-        ///     Checks if a <see cref="Thing" /> is currently held as one of the <see cref="StoredThings" /> on an
-        ///     <see cref="Building_ExtendedStorage" />'s
-        ///     <see cref="OutputSlot" />.
-        /// </summary>
-        /// <param name="t"><see cref="Thing" /> to check</param>
-        public static Building_ExtendedStorage GetStoringBuilding(Thing t)
-        {
-            Building_ExtendedStorage b = t.Map?.thingGrid.ThingAt<Building_ExtendedStorage>(t.Position);
-
-            return (b?.OutputSlot == t.Position) && (b.StoredThingDef == t.def)
-                ? b
-                : null;
-        }
-
-        public static bool TryGetSubstitutionGraphics(Thing t, out Graphic gfx)
-        {
-            Building_ExtendedStorage b = GetStoringBuilding(t);
-            if ((b != null) && !t.def.IsApparel)
-            {
-                gfx = t == b._suppressedDrawCandidate
-                    ? b._gfxStoredThing
-                    : null;
-                return true;
-            }
-            gfx = null;
-            return false;
-        }
-
-        public override void PostMapInit()
-        {
-            base.PostMapInit();
-
-            ChunkifyOutputSlot();
-            UpdateDrawAttributes();
-        }
-
-        /// <summary>
-        ///     Removes up to <see cref="ThingDef.stackLimit" /> from <paramref name="existingThing" /> and creates a
-        ///     new stack of corresponding size in <paramref name="targetLocation" />.
-        /// </summary>
-        /// <returns>Newly created stack</returns>
-        private static Thing SplitOfStackInto(Thing existingThing, IntVec3 targetLocation)
-        {
-            Map map = existingThing.Map;
-
-            Thing createdThing = ThingMaker.MakeThing(existingThing.def, existingThing.Stuff);
-            createdThing.HitPoints = existingThing.HitPoints;
-
-            if (existingThing.stackCount > existingThing.def.stackLimit)
-            {
-                existingThing.stackCount -= existingThing.def.stackLimit;
-                createdThing.stackCount = existingThing.def.stackLimit;
-            }
-            else
-            {
-                createdThing.stackCount = existingThing.stackCount;
-                existingThing.Destroy();
-            }
-
-            return GenSpawn.Spawn(createdThing, targetLocation, map);
-        }
-
-
-        // we can't really dump items immediately - otherwise typical use scenarios like "clear all, reselect X" would dump items immediately
-        private void TryUnstackStoredItems()
-        {
-            List<Thing> thingsToSplurge = StoredThings.ToList();
-
-            // queue splurge action for next tick - action checks *on invocation* if queued thing to splurge is allowed again, skips those
-            queuedTickAction += () =>
-                                {
-                                    SplurgeThings(thingsToSplurge.Where(t => t.def != StoredThingDef), outputSlot, true);
-                                    SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
-                                };
-        }
-
-
-        public static bool TryGetNext<T>(IEnumerator<T> e, Predicate<T> predicate, out T value)
-        {
-            while (true)
-            {
-                if (!e.MoveNext())
-                {
-                    value = default(T);
-                    return false;
-                }
-                value = e.Current;
-                if (predicate(value))
-                    return true;
-            }
-        }
-
-        public override void DrawGUIOverlay()
-        {
-            if (Find.CameraDriver.CurrentZoom != CameraZoomRange.Closest)
-                return;
-
-            Color labelColor = new Color(1f, 1f, 0.5f, 0.75f); // yellowish white for our total stack counts - default is GenMapUI.DefaultThingLabelColor
-
-            if (!string.IsNullOrEmpty(_label))
-                GenMapUI.DrawThingLabel(StoredThings.First(), _label, labelColor);
-        }
-
-
-        private void UpdateDrawAttributes()
-        {
-            if (StoredThingDef != null)
-            {
-                List<Thing> items = StoredThings.ToList();
-
-                QualityCategory[] qualityCategories = items.Select(t =>
-                                                                   {
-                                                                       QualityCategory c;
-                                                                       return t.TryGetQuality(out c) ? c : (QualityCategory?) null;
-                                                                   })
-                                                           .Where(c => c != null)
-                                                           .Select(c => c.Value)
-                                                           .Distinct()
-                                                           .OrderBy(c => c)
-                                                           .ToArray();
-
-                int total = StoredThingTotal;
-
-
-                if (qualityCategories.Length != 0)
-                {
-                    _label = qualityCategories[0].GetLabelShort();
-
-                    if (qualityCategories.Length > 1)
-                        _label = string.Format(GeneratedDefs.keyed.ExtendedStorage_MultipleQualities.Translate(), _label);
-                }
-                else
-                {
-                    _label = string.Format(GeneratedDefs.keyed.ExtendedStorage_TotalCount.Translate(), total);
-                }
-
-                if (!StoredThingDef.IsApparel)
-                {
-                    _gfxStoredThing = (StoredThingDef.graphic as Graphic_StackCount)
-                                          ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)
-                                      ?? StoredThingDef.graphic;
-                    _suppressedDrawCandidate = items[0];
-                }
-                else
-                {
-                    _gfxStoredThing = null;
-                    _suppressedDrawCandidate = null;
-                }
-            }
-            else
-            {
-                _label = null;
-                _gfxStoredThing = null;
-                _suppressedDrawCandidate = null;
-            }
-        }
-
-
-        public override void Notify_LostThing(Thing newItem)
-        {
-            base.Notify_LostThing(newItem);
-            UpdateDrawAttributes();
-        }
-
-
-        public override void Notify_ReceivedThing(Thing newItem)
-        {
-            base.Notify_ReceivedThing(newItem);
-            UpdateDrawAttributes();
-        }
-
-        public override void Tick()
-        {
-            base.Tick();
-            if (this.IsHashIntervalTick(10))
-            {
-                queuedTickAction?.Invoke();
-                queuedTickAction = null;
-
-                ChunkifyOutputSlot();
-
-                TryMoveItem();
-            }
-        }
-
-        /// <summary>
-        ///     Splits of or combiners non <see cref="ThingDef.stackLimit" /> stacks matching <see cref="StoredThingDef" /> on
+        ///     Splits of or combines non <see cref="ThingDef.stackLimit" /> stacks matching <see cref="StoredThingDef" /> on
         ///     <see cref="OutputSlot" />.
         /// </summary>
         private void ChunkifyOutputSlot()
@@ -491,6 +360,67 @@ namespace ExtendedStorage
                 thing.Destroy(DestroyMode.Vanish);
         }
 
+        /// <summary>
+        ///  force update <see cref="StoredThingDef"/> with actual storage situation
+        /// </summary>
+        private void RecalculateStoredThingDef()
+        {
+            if (StoredThingDef == null)
+            {
+                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot)
+                                     .FirstOrDefault(t => settings.filter.Allows(t))
+                                     ?.def;
+            }
+            else
+            {
+                if (!StoredThings.Any())
+                    StoredThingDef = null;
+            }
+        }
+
+        /// <summary>
+        ///     Tries extracting all elements from <paramref name="things" /> around <paramref name="center" /> in stacks no larger
+        ///     than each thing's def's <see cref="ThingDef.stackLimit" />.
+        /// </summary>
+        /// <returns>
+        ///     All extracted thing stacks
+        /// </returns>
+        private IEnumerable<Thing> SplurgeThings(IEnumerable<Thing> things, IntVec3 center, bool forceSplurge = false)
+        {
+            // TODO: think about using built in logic - check ActriveDropPod.PodOpen & GenPlace.TryPlaceThing
+
+            List<Thing> result = new List<Thing>();
+
+            using (IEnumerator<IntVec3> cellEnumerator = GenRadial.RadialCellsAround(center, 20, false).GetEnumerator())
+            {
+                using (IEnumerator<Thing> thingEnumerator = things.GetEnumerator())
+                {
+                    while (true)
+                    {
+                        if (!thingEnumerator.MoveNext())
+                            goto finished; // no more things
+
+                        Thing thing = thingEnumerator.Current;
+
+                        while (!thing.DestroyedOrNull() && (forceSplurge || (thing.stackCount > thing.def.stackLimit)))
+                        {
+                            IntVec3 availableCell;
+                            if (!EnumUtility.TryGetNext(cellEnumerator, c => c.Standable(Map), out availableCell))
+                            {
+                                Log.Warning($"Ran out of cells to splurge {thing.LabelCap} - there might be issues on save/reload.");
+                                goto finished; // no more cells
+                            }
+
+                            result.Add(StorageUtility.SplitOfStackInto(thing, availableCell));
+                        }
+                    }
+                }
+            }
+
+            finished:
+            return result;
+        }
+
         private void TryMoveItem()
         {
             Thing input = StoredThingAtInput;
@@ -525,41 +455,89 @@ namespace ExtendedStorage
             }
         }
 
-        protected void SetCallback(ThingFilter filter, Action callback)
+        internal void TrySplurgeStoredItems()
         {
-            if (_settingsChangedCallback_FI == null)
-                throw new ArgumentNullException("_settingsChangedCallback FieldInfo");
+            IEnumerable<Thing> storedThings = StoredThings;
 
-            _settingsChangedCallback_FI.SetValue(filter, callback);
+            if (storedThings == null)
+                return;
+
+            SplurgeThings(storedThings, outputSlot, true);
+            SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
         }
 
-        public override void ExposeData()
+
+        /// <remarks>
+        /// we can't really dump items immediately - otherwise typical use scenarios like "clear all, reselect X" would dump items immediately
+        /// </remarks>
+        private void TryUnstackStoredItems()
         {
-            base.ExposeData();
-            Scribe_Defs.Look(ref _storedThingDef, "storedThingDef");
-            Scribe_Deep.Look(ref userSettings, "userSettings");
+            List<Thing> thingsToSplurge = StoredThings.ToList();
 
-            // we need to re-apply our callback on the userSettings after load.
-            // in addition, we need some migration code for handling mid-save upgrades.
-            // todo: the migration part of this can be removed on the A17 update.
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            // queue splurge action for next tick - action checks *on invocation* if queued thing to splurge is allowed again, skips those
+            queuedTickAction += () =>
+                                {
+                                    Thing[] validThings = thingsToSplurge.Where(t => t.def != StoredThingDef).ToArray();
+                                    SplurgeThings(validThings, outputSlot, true);
+
+                                    if (validThings.Length != 0)
+                                        SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
+                                };
+        }
+
+        /// <summary>
+        /// Update necessary data for label & icon overrides
+        /// </summary>
+        private void UpdateDrawAttributes()
+        {
+            if (StoredThingDef != null)
             {
-                // migration
-                if (userSettings == null)
+                List<Thing> items = StoredThings.ToList();
+
+                QualityCategory[] qualityCategories = items.Select(t =>
+                                                                   {
+                                                                       QualityCategory c;
+                                                                       return t.TryGetQuality(out c) ? c : (QualityCategory?) null;
+                                                                   })
+                                                           .Where(c => c != null)
+                                                           .Select(c => c.Value)
+                                                           .Distinct()
+                                                           .OrderBy(c => c)
+                                                           .ToArray();
+
+                int total = StoredThingTotal;
+
+
+                if (qualityCategories.Length != 0)
                 {
-                    // create 'user' storage settings
-                    userSettings = new StorageSettings(this);
+                    _label = qualityCategories[0].GetLabelShort();
 
-                    // copy over previous filter/priority
-                    userSettings.filter.CopyAllowancesFrom(settings.filter);
-                    userSettings.Priority = settings.Priority;
-
-                    // apply currently stored logic
-                    Notify_StoredThingDefChanged();
+                    if (qualityCategories.Length > 1)
+                        _label = string.Format(GeneratedDefs.keyed.ExtendedStorage_MultipleQualities.Translate(), _label);
+                }
+                else
+                {
+                    _label = string.Format(GeneratedDefs.keyed.ExtendedStorage_TotalCount.Translate(), total);
                 }
 
-                // re-apply callback
-                SetCallback(userSettings.filter, Notify_UserSettingsChanged);
+                if (!StoredThingDef.IsApparel)
+                {
+                    _gfxStoredThing = (StoredThingDef.graphic as Graphic_StackCount)
+                                          ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)
+                                      ?? StoredThingDef.graphic;
+                    _suppressedDrawCandidate = items[0];
+                }
+                else
+                {
+                    _gfxStoredThing = null;
+                    _suppressedDrawCandidate = null;
+                }
+            }
+            else
+            {
+                _label = null;
+                _gfxStoredThing = null;
+                _suppressedDrawCandidate = null;
             }
         }
     }

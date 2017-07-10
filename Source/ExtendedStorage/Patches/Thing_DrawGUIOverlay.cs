@@ -9,7 +9,7 @@ namespace ExtendedStorage
         public static bool Prefix(Thing __instance)
         {
             // supress label draws for stored things
-            return Building_ExtendedStorage.GetStoringBuilding(__instance) == null;
+            return StorageUtility.GetStoringBuilding(__instance) == null;
         }
     }
 }

@@ -1,12 +1,11 @@
 using System;
 using System.Reflection;
-using Verse;
-using RimWorld;
 using Harmony;
+using Verse;
 
 namespace ExtendedStorage
 {
-    class Bootstrap : Def
+    internal class Bootstrap : Def
     {
         private const BindingFlags UniversalBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -17,9 +16,9 @@ namespace ExtendedStorage
                 {
                     HarmonyInstance instance = HarmonyInstance.Create("com.extendedstorage.patches");
                     instance.PatchAll(Assembly.GetExecutingAssembly());
-                    Log.Message($"Extended Storage :: Harmony patches successful");               
+                    Log.Message($"Extended Storage :: Harmony patches successful");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Error("Extended Storage :: Caught exception: " + ex);
                 }

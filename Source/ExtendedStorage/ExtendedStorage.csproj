@@ -54,16 +54,30 @@
   <ItemGroup>
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Building_ExtendedStorage.cs" />
-    <Compile Include="ExtendedStorage.cs" />
+    <Compile Include="ESDef.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
+    <Compile Include="Languages\DefGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />
     <Compile Include="Patches\MinifyUtility_MakeMinified.cs" />
+    <Compile Include="Patches\Thing_DrawAt.cs" />
     <Compile Include="Patches\Thing_SpawnSetup.cs" />
+    <Compile Include="Patches\Thing_DrawGUIOverlay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Languages\DefGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DefGenerator.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

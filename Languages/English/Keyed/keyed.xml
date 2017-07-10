@@ -2,4 +2,7 @@
 <LanguageData>
 	<ExtendedStorage.CurrentlyStoring>Currently storing: {0}</ExtendedStorage.CurrentlyStoring>
 	<ExtendedStorage.Nothing>Nothing</ExtendedStorage.Nothing>
+
+	<ExtendedStorage.TotalCount>&#x2211; {0}</ExtendedStorage.TotalCount>
+	<ExtendedStorage.MultipleQualities>{0}+</ExtendedStorage.MultipleQualities>
 </LanguageData>

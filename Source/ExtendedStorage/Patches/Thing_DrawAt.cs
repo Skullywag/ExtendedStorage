@@ -10,7 +10,7 @@ namespace ExtendedStorage
         public static bool Prefix(Thing __instance, Vector3 drawLoc, bool flip)
         {
             Graphic g;
-            if (Building_ExtendedStorage.TryGetSubstitutionGraphics(__instance, out g))
+            if (StorageUtility.HasSupressedOrSubstituedGraphics(__instance, out g))
             {
                 // substitute draws for stored things
                 g?.DrawWorker(

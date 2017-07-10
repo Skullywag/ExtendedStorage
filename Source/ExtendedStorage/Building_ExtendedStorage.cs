@@ -25,6 +25,7 @@ namespace ExtendedStorage
         private int maxStorage = 1000;
         private IntVec3 outputSlot;
         private Action queuedTickAction;
+        internal string label;
 
         public StorageSettings userSettings;
 
@@ -92,6 +93,9 @@ namespace ExtendedStorage
 
         public int StoredThingTotal => StoredThings.Sum(t => t.stackCount);
 
+        public override string LabelNoCount => label;
+
+
         #endregion
 
         #region Base overrides
@@ -119,6 +123,10 @@ namespace ExtendedStorage
             Scribe_Defs.Look(ref _storedThingDef, "storedThingDef");
             Scribe_Deep.Look(ref userSettings, "userSettings");
 
+            if (Scribe.mode != LoadSaveMode.Saving || this.label != null) {
+                Scribe_Values.Look<string>(ref label, "label", def.label, false);
+            }
+
             // we need to re-apply our callback on the userSettings after load.
             // in addition, we need some migration code for handling mid-save upgrades.
             // todo: the migration part of this can be removed on the A17 update.
@@ -139,7 +147,7 @@ namespace ExtendedStorage
                 }
 
                 // re-apply callback
-                SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged);
+                SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged); 
             }
         }
 
@@ -162,6 +170,18 @@ namespace ExtendedStorage
             IEnumerable<Gizmo> gizmos = Building_GetGizmos();
             foreach (Gizmo gizmo in gizmos)
                 yield return gizmo;
+
+
+            Command_Action a = new Command_Action
+                               {
+                                   icon = ContentFinder<Texture2D>.Get("UI/Icons/Rename", true),
+                                   defaultDesc = GeneratedDefs.keyed.ExtendedStorage_Rename.Translate(this.def.label),
+                                   defaultLabel = "Rename".Translate(),
+                                   activateSound = SoundDef.Named("Click"),
+                                   action = delegate { Find.WindowStack.Add(new Dialog_Rename(this)); },
+                                   groupKey = 942608684                 // guaranteed to be random - https://xkcd.com/221/
+            };
+            yield return a;
 
             // our CopyPasta gizmos
             foreach (Gizmo gizmo in StorageSettingsClipboard.CopyPasteGizmosFor(userSettings))
@@ -226,6 +246,9 @@ namespace ExtendedStorage
             List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList();
             inputSlot = list[0];
             outputSlot = list[1];
+
+            if (this.label == null || this.label.Trim().Length == 0)
+                this.label = base.def.label;
         }
 
         public override void Tick()
@@ -486,7 +509,7 @@ namespace ExtendedStorage
         }
 
         /// <summary>
-        /// Update necessary data for label & icon overrides
+        /// Update necessary data for label &amp; icon overrides
         /// </summary>
         private void UpdateDrawAttributes()
         {

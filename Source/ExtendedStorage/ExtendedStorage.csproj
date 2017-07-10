@@ -68,6 +68,7 @@
     <Compile Include="Patches\Thing_SpawnSetup.cs" />
     <Compile Include="Patches\Thing_DrawGUIOverlay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dialog_Rename.cs" />    
     <Compile Include="Utility\AccessUtility.cs" />
     <Compile Include="Utility\EnumUtility.cs" />
     <Compile Include="Utility\StorageUtility.cs" />

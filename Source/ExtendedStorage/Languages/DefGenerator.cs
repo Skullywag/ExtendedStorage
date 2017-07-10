@@ -10,34 +10,32 @@
 using System.CodeDom.Compiler;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ExtendedStorage
-{
-    [GeneratedCode("DefGenerator.tt", "0.1")]
+namespace ExtendedStorage {
+    [GeneratedCode("DefGenerator.tt","0.1")]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public static class GeneratedDefs
-    {
-        public static class keyed
-        {
-            /// <summary>
-            ///     Get's the translation key for '<em>Currently storing: {0}</em>'
-            /// </summary>
-            public const string ExtendedStorage_CurrentlyStoring = "ExtendedStorage.CurrentlyStoring";
-
-            /// <summary>
-            ///     Get's the translation key for '<em>Nothing</em>'
-            /// </summary>
-            public const string ExtendedStorage_Nothing = "ExtendedStorage.Nothing";
-
-            /// <summary>
-            ///     Get's the translation key for '<em>∑ {0}</em>'
-            /// </summary>
-            public const string ExtendedStorage_TotalCount = "ExtendedStorage.TotalCount";
-
-            /// <summary>
-            ///     Get's the translation key for '<em>{0}+</em>'
-            /// </summary>
-            public const string ExtendedStorage_MultipleQualities = "ExtendedStorage.MultipleQualities";
-        }
-    }
+	public static partial class GeneratedDefs {
+		public static class @keyed {
+			/// <summary>
+			/// Get's the translation key for '<em>Currently storing: {0}</em>'
+			/// </summary>
+			public const string @ExtendedStorage_CurrentlyStoring = "ExtendedStorage.CurrentlyStoring";
+			/// <summary>
+			/// Get's the translation key for '<em>Nothing</em>'
+			/// </summary>
+			public const string @ExtendedStorage_Nothing = "ExtendedStorage.Nothing";
+			/// <summary>
+			/// Get's the translation key for '<em>∑ {0}</em>'
+			/// </summary>
+			public const string @ExtendedStorage_TotalCount = "ExtendedStorage.TotalCount";
+			/// <summary>
+			/// Get's the translation key for '<em>{0}+</em>'
+			/// </summary>
+			public const string @ExtendedStorage_MultipleQualities = "ExtendedStorage.MultipleQualities";
+			/// <summary>
+			/// Get's the translation key for '<em>Rename this {0}.</em>'
+			/// </summary>
+			public const string @ExtendedStorage_Rename = "ExtendedStorage.Rename";
+		}
+	}
 }

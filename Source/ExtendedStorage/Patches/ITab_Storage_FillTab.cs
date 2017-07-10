@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using Harmony;
 using RimWorld;
-using UnityEngine;
-using Verse;
 
 namespace ExtendedStorage
 {
@@ -31,52 +25,50 @@ namespace ExtendedStorage
 
 
         /// <summary>
-        /// Wrapper that get's the <see cref="IStoreSettingsParent"/> &amp; <see cref="StorageSettings"/> for 
-        /// a <see cref="RimWorld.ITab_Storage"/> <paramref name="tab"/>.
-        /// 
-        /// Special cases ExtendedStorage's <see cref="ExtendedStorage.ITab_Storage"/> tabs.
+        ///     Wrapper that get's the <see cref="IStoreSettingsParent" /> &amp; <see cref="StorageSettings" /> for
+        ///     a <see cref="RimWorld.ITab_Storage" /> <paramref name="tab" />.
+        ///     Special cases ExtendedStorage's <see cref="ExtendedStorage.ITab_Storage" /> tabs.
         /// </summary>
         /// <remarks>
-        /// Wrapper has been constructed somewhat convoluted to minimize IL-byte size in invocation. 
-        /// 
-        /// A tupled return value (instead of using out parameters) would be cleaner, but that would necessitate
-        /// retrievals from properties/fields afterwards (which would mean more bytes of IL).
-        /// 
-        /// Also the <paramref name="parent"/> parameter is as many <c>out</c> uses as are possible, since
-        /// the <see cref="StorageSettings"/> is actually wrapped inside an anonymous compiler generated type
-        /// (which is inaccessible to us).
+        ///     Wrapper has been constructed somewhat convoluted to minimize IL-byte size in invocation.
+        ///     A tupled return value (instead of using out parameters) would be cleaner, but that would necessitate
+        ///     retrievals from properties/fields afterwards (which would mean more bytes of IL).
+        ///     Also the <paramref name="parent" /> parameter is as many <c>out</c> uses as are possible, since
+        ///     the <see cref="StorageSettings" /> is actually wrapped inside an anonymous compiler generated type
+        ///     (which is inaccessible to us).
         /// </remarks>
-        public static StorageSettings GetSettings(RimWorld.ITab_Storage tab, out IStoreSettingsParent parent) {
-            ExtendedStorage.ITab_Storage extended = tab as ExtendedStorage.ITab_Storage;
+        public static StorageSettings GetSettings(RimWorld.ITab_Storage tab, out IStoreSettingsParent parent)
+        {
+            ITab_Storage extended = tab as ITab_Storage;
 
-            if (extended == null) {
+            if (extended == null)
+            {
                 parent = GetSelStoreSettingsParent(tab);
-               return parent.GetStoreSettings();
-            } else {
-                Building_ExtendedStorage building = extended.Building;
-
-                parent = building;
-                return building?.userSettings;
+                return parent.GetStoreSettings();
             }
+            Building_ExtendedStorage building = extended.Building;
+
+            parent = building;
+            return building?.userSettings;
         }
 
 
         /// <remarks>
-        /// Changes the IL code so the patched method beginning is functionally changed from
-        /// <code>
+        ///     Changes the IL code so the patched method beginning is functionally changed from
+        ///     <code>
         ///     IStoreSettingsParent selStoreSettingsParent = this.SelStoreSettingsParent;
         ///     StorageSettings settings = selStoreSettingsParent.GetStoreSettings();
         ///     ...
         /// </code>
-        /// to
-        /// <code>
+        ///     to
+        ///     <code>
         ///     IStoreSettingsParent selStoreSettingsParent;
         ///     StorageSettings settings = ITab_Storage_FillTab.GetSettings(this, out selStoreSettingsParent);
         ///     ...
         /// </code>
-        /// (with some IL Opcode padding &amp; minor Harmony witchery)
+        ///     (with some IL Opcode padding &amp; minor Harmony witchery)
         /// </remarks>
-        /// <seealso cref="GetSettings"/>
+        /// <seealso cref="GetSettings" />
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr, ILGenerator ilgen)
         {
             /*  Don't completely replace the base implementation. Only change the absolutely bare minimum.
@@ -116,12 +108,12 @@ namespace ExtendedStorage
             instructions.Insert(1, new CodeInstruction(OpCodes.Dup));
             instructions.RemoveAt(4);
             instructions.Insert(4, new CodeInstruction(OpCodes.Ldloca_S, 0));
-            instructions.Insert(5, new CodeInstruction(OpCodes.Call, typeof(ITab_Storage_FillTab).GetMethod(nameof(ITab_Storage_FillTab.GetSettings))));
+            instructions.Insert(5, new CodeInstruction(OpCodes.Call, typeof(ITab_Storage_FillTab).GetMethod(nameof(GetSettings))));
             instructions.RemoveAt(6);
             instructions.RemoveAt(6);
             instructions.RemoveAt(6);
             instructions.RemoveAt(6);
-            for (int i=1; i<=6; i++)
+            for (int i = 1; i <= 6; i++)
                 instructions.Insert(6, new CodeInstruction(OpCodes.Nop));
 
             return instructions;

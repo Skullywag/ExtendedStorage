@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Building_ExtendedStorage.cs" />
+    <Compile Include="Dialog_Rename.cs" />
     <Compile Include="ExtendedStorage.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
     <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />

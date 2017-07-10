@@ -2,4 +2,6 @@
 <LanguageData>
 	<ExtendedStorage.CurrentlyStoring>Currently storing: {0}</ExtendedStorage.CurrentlyStoring>
 	<ExtendedStorage.Nothing>Nothing</ExtendedStorage.Nothing>
+
+	<ExtendedStorage.Rename>Rename this {0}.</ExtendedStorage.Rename>
 </LanguageData>

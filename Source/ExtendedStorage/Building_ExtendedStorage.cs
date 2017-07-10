@@ -17,6 +17,7 @@ namespace ExtendedStorage
         private int maxStorage = 1000;
         private ThingDef _storedThingDef;
         private Action queuedTickAction;
+        internal string label;
 
         public IntVec3 OutputSlot { get { return outputSlot; } }
 
@@ -76,6 +77,8 @@ namespace ExtendedStorage
             }
         }
 
+        public override string LabelNoCount => label;
+
         private Func<IEnumerable<Gizmo>> Building_GetGizmos;
         
         public override IEnumerable<Gizmo> GetGizmos()
@@ -98,6 +101,17 @@ namespace ExtendedStorage
             foreach ( Gizmo gizmo in gizmos )
                 yield return gizmo;
 
+
+            Command_Action a = new Command_Action
+                               {
+                                   icon = ContentFinder<Texture2D>.Get("UI/Icons/Rename", true),
+                                   defaultDesc = "ExtendedStorage.Rename".Translate(this.def.label),
+                                   defaultLabel = "Rename".Translate(),
+                                   activateSound = SoundDef.Named("Click"),
+                                   action = delegate { Find.WindowStack.Add(new Dialog_Rename(this)); }
+                               };
+            yield return a;
+
             // our CopyPasta gizmos
             foreach ( Gizmo gizmo in StorageSettingsClipboard.CopyPasteGizmosFor( userSettings ) )
                 yield return gizmo;
@@ -107,6 +121,8 @@ namespace ExtendedStorage
         {
             // create 'game' storage settings
             base.PostMake();
+
+            label = GenLabel.ThingLabel(this.def, this.Stuff, 1);
 
             // create 'user' storage settings
             userSettings = new StorageSettings( this );
@@ -399,7 +415,12 @@ namespace ExtendedStorage
             base.ExposeData();
             Scribe_Defs.Look<ThingDef>(ref _storedThingDef, "storedThingDef" );
             Scribe_Deep.Look( ref userSettings, "userSettings" );
-            
+
+            string label = this.Label;
+            if (Scribe.mode != LoadSaveMode.Saving || this.label != null) {
+                Scribe_Values.Look<string>(ref label, "label", base.def.label, false);
+            }
+
             // we need to re-apply our callback on the userSettings after load.
             // in addition, we need some migration code for handling mid-save upgrades.
             // todo: the migration part of this can be removed on the A17 update.

@@ -4,7 +4,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ExtendedStorage.ESdef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase">
     <defName>Storage_Skip</defName>
     <label>Skip</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -21,13 +21,13 @@
       <WorkToBuild>780</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
+      <ES.StorageFactor>12</ES.StorageFactor>        
     </statBases>
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
-    <maxStorage>900</maxStorage>
     <costStuffCount>90</costStuffCount>
-    <description>Haulers carry materials here for storage. Holds more than a wooden pallet but not as neatly.</description>
+    <description>Haulers carry materials here for storage. Holds more than a pallet but not as neatly.</description>
     <size>(2,1)</size>
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
@@ -54,6 +54,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ExtendedStorage.ESdef>
+  </ThingDef>
 
 </Buildings>

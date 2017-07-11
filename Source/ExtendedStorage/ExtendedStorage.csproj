@@ -34,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <!-- this block is *not* needed for devenv builds - *BUT* if we ever switch to an msbuild based system this allows T4 access to project variables -->
+    <T4ParameterValues Include="RimworldManagedDir">
+      <Value>$(RimworldManagedDir)</Value>
+    </T4ParameterValues>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\Assemblies\0Harmony.dll</HintPath>
       <Private>False</Private>
@@ -52,14 +58,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrap.cs" />
+    <Compile Include="ExtendedStorageMod.cs" />
     <Compile Include="Building_ExtendedStorage.cs" />
-    <Compile Include="ESDef.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
-    <Compile Include="Languages\DefGenerator.cs">
+    <Compile Include="Defs.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DefGenerator.tt</DependentUpon>
+      <DependentUpon>Defs.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Languages\LanguageKeys.Generatedr.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LanguageKeys.Generatedr.tt</DependentUpon>
     </Compile>
     <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />
@@ -73,10 +83,14 @@
     <Compile Include="Utility\StorageUtility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Languages\DefGenerator.tt">
+    <None Include="Languages\LanguageKeys.Generatedr.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DefGenerator.cs</LastGenOutput>
-    </Content>
+      <LastGenOutput>LanguageKeys.Generatedr.cs</LastGenOutput>
+    </None>
+    <None Include="Defs.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Defs.Generated.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

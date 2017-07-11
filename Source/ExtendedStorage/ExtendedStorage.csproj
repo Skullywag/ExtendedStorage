@@ -66,10 +66,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Defs.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="Languages\LanguageKeys.Generatedr.cs">
+    <Compile Include="Languages\LanguageKeys.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>LanguageKeys.Generatedr.tt</DependentUpon>
+      <DependentUpon>LanguageKeys.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="Patches\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />
@@ -83,9 +83,9 @@
     <Compile Include="Utility\StorageUtility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Languages\LanguageKeys.Generatedr.tt">
+    <None Include="Languages\LanguageKeys.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LanguageKeys.Generatedr.cs</LastGenOutput>
+      <LastGenOutput>LanguageKeys.Generated.cs</LastGenOutput>
     </None>
     <None Include="Defs.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

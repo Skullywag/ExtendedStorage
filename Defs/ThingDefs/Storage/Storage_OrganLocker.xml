@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ExtendedStorage.ESdef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase">
     <defName>Organ_Locker</defName>
     <label>Organ Locker</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -11,8 +11,7 @@
       <texPath>Things/Building/Furniture/Locker</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(2,1)</drawSize>
-    </graphicData>
-    <maxStorage>10</maxStorage>
+    </graphicData>    
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
@@ -21,6 +20,7 @@
       <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>1</Beauty>
+      <ES.StorageFactor>10</ES.StorageFactor>
     </statBases>
     <description>Haulers carry body parts here for storage.</description>
     <size>(2,1)</size>

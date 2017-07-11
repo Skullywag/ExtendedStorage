@@ -22,7 +22,7 @@ namespace ExtendedStorage
 
         private Func<IEnumerable<Gizmo>> Building_GetGizmos;
         private IntVec3 inputSlot;
-        private int maxStorage = 1000;
+
         private IntVec3 outputSlot;
         private Action queuedTickAction;
         internal string label;
@@ -43,17 +43,7 @@ namespace ExtendedStorage
 
         public bool AtCapacity => StoredThingTotal >= ApparentMaxStorage;
 
-        public int ApparentMaxStorage
-        {
-            get
-            {
-                if (StoredThingDef == null)
-                    return int.MaxValue;
-                if (StoredThingDef.smallVolume)
-                    return (int) (maxStorage/0.2f);
-                return maxStorage;
-            }
-        }
+        public int ApparentMaxStorage => (int) (StoredThingDef?.stackLimit*this.GetStatValue(DefReferences.Stat_ES_StorageFactor) ?? Int32.MaxValue);
 
         public IntVec3 OutputSlot => outputSlot;
 
@@ -175,7 +165,7 @@ namespace ExtendedStorage
             Command_Action a = new Command_Action
                                {
                                    icon = ContentFinder<Texture2D>.Get("UI/Icons/Rename", true),
-                                   defaultDesc = GeneratedDefs.keyed.ExtendedStorage_Rename.Translate(this.def.label),
+                                   defaultDesc = LanguageKeys.keyed.ExtendedStorage_Rename.Translate(this.def.label),
                                    defaultLabel = "Rename".Translate(),
                                    activateSound = SoundDef.Named("Click"),
                                    action = delegate { Find.WindowStack.Add(new Dialog_Rename(this)); },
@@ -192,8 +182,8 @@ namespace ExtendedStorage
         {
             StringBuilder inspectString = new StringBuilder();
             inspectString.Append(base.GetInspectString());
-            inspectString.Append(GeneratedDefs.keyed.ExtendedStorage_CurrentlyStoring.Translate(StoredThingDef?.LabelCap ??
-                                                                                                GeneratedDefs.keyed.ExtendedStorage_Nothing.Translate()));
+            inspectString.Append(LanguageKeys.keyed.ExtendedStorage_CurrentlyStoringInspect.Translate(StoredThingDef?.LabelCap ??
+                                                                                                      LanguageKeys.keyed.ExtendedStorage_Nothing.Translate()));
             return inspectString.ToString();
         }
 
@@ -236,13 +226,12 @@ namespace ExtendedStorage
             ChunkifyOutputSlot();
 
             // can't do this in postmake, since stored stacks might not yet have been created
-            UpdateDrawAttributes();
+            UpdateCachedAttributes();
         }
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            maxStorage = ((ESdef) def).maxStorage;
             List<IntVec3> list = GenAdj.CellsOccupiedBy(this).ToList();
             inputSlot = list[0];
             outputSlot = list[1];
@@ -250,6 +239,30 @@ namespace ExtendedStorage
             if (this.label == null || this.label.Trim().Length == 0)
                 this.label = base.def.label;
         }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats {
+            get
+            {
+                foreach (StatDrawEntry specialDisplayStat in base.SpecialDisplayStats)
+                {
+                    yield return specialDisplayStat;
+                }
+
+                yield return new StatDrawEntry(
+                                 DefReferences.StatCategory_ExtendedStorage,
+                                 LanguageKeys.keyed.ExtendedStorage_CurrentlyStoringStat.Translate(),
+                                 StoredThingDef?.LabelCap ?? LanguageKeys.keyed.ExtendedStorage_Nothing.Translate(),
+                                 -1);
+                yield return new StatDrawEntry(
+                                 DefReferences.StatCategory_ExtendedStorage,
+                                 LanguageKeys.keyed.ExtendedStorage_UsageStat.Translate(),
+                                 StoredThingDef != null 
+                                    ? LanguageKeys.keyed.ExtendedStorage_UsageStat_Value.Translate(StoredThingTotal, ApparentMaxStorage)
+                                    : LanguageKeys.keyed.ExtendedStorage_NA.Translate(),
+                                 -2);
+            }
+        }
+
 
         public override void Tick()
         {
@@ -315,7 +328,7 @@ namespace ExtendedStorage
             else
                 settings.filter.CopyAllowancesFrom(userSettings.filter);
 
-            UpdateDrawAttributes();
+            UpdateCachedAttributes();
         }
 
         private void Notify_SlotGroupItemsChanged()
@@ -324,9 +337,9 @@ namespace ExtendedStorage
 
             RecalculateStoredThingDef();
 
-            // Updates to StoredThingDef cascade to UpdateDrawAttributes() - only need to call that if no change occured
+            // Updates to StoredThingDef cascade to UpdateCachedAttributes() - only need to call that if no change occured
             if (_storedThingDef == oldValue)
-                UpdateDrawAttributes();
+                UpdateCachedAttributes();
         }
 
         #endregion
@@ -511,7 +524,7 @@ namespace ExtendedStorage
         /// <summary>
         /// Update necessary data for label &amp; icon overrides
         /// </summary>
-        private void UpdateDrawAttributes()
+        private void UpdateCachedAttributes()
         {
             if (StoredThingDef != null)
             {
@@ -536,11 +549,11 @@ namespace ExtendedStorage
                     _label = qualityCategories[0].GetLabelShort();
 
                     if (qualityCategories.Length > 1)
-                        _label = string.Format(GeneratedDefs.keyed.ExtendedStorage_MultipleQualities.Translate(), _label);
+                        _label = string.Format(LanguageKeys.keyed.ExtendedStorage_MultipleQualities.Translate(), _label);
                 }
                 else
                 {
-                    _label = string.Format(GeneratedDefs.keyed.ExtendedStorage_TotalCount.Translate(), total);
+                    _label = string.Format(LanguageKeys.keyed.ExtendedStorage_TotalCount.Translate(), total);
                 }
 
                 if (!StoredThingDef.IsApparel)

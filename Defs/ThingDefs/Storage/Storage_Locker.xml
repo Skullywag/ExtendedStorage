@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ExtendedStorage.ESdef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase">
     <defName>Storage_Locker</defName>
     <label>Clothing Rack</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -12,7 +12,6 @@
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>(3,2)</drawSize>
     </graphicData>
-    <maxStorage>5</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
@@ -21,6 +20,7 @@
       <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>1</Beauty>
+      <ES.StorageFactor>10</ES.StorageFactor>
     </statBases>
     <description>Haulers carry apparel here for storage.</description>
     <size>(2,1)</size>
@@ -54,6 +54,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ExtendedStorage.ESdef>
+  </ThingDef>
 
 </Buildings>

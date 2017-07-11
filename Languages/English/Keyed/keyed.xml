@@ -1,10 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-	<ExtendedStorage.CurrentlyStoring>Currently storing: {0}</ExtendedStorage.CurrentlyStoring>
+	<ExtendedStorage.CurrentlyStoringInspect>Currently storing: {0}</ExtendedStorage.CurrentlyStoringInspect>
+
 	<ExtendedStorage.Nothing>Nothing</ExtendedStorage.Nothing>
 
 	<ExtendedStorage.TotalCount>&#x2211; {0}</ExtendedStorage.TotalCount>
 	<ExtendedStorage.MultipleQualities>{0}+</ExtendedStorage.MultipleQualities>
 
 	<ExtendedStorage.Rename>Rename this {0}.</ExtendedStorage.Rename>
+
+	<ExtendedStorage.CurrentlyStoringStat>Currently storing</ExtendedStorage.CurrentlyStoringStat>
+	<ExtendedStorage.UsageStat>Usage</ExtendedStorage.UsageStat>
+	<ExtendedStorage.UsageStat.Value>{0} / {1}</ExtendedStorage.UsageStat.Value>
+		
+	<ExtendedStorage.NA>N/A</ExtendedStorage.NA>
+
 </LanguageData>

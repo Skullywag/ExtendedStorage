@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ExtendedStorage.ESdef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase">
     <defName>Storage_MedicineCabinet</defName>
     <label>Medicine Cabinet</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -13,7 +13,6 @@
       <drawSize>(3,2)</drawSize>
       <shaderType>CutoutComplex</shaderType>
     </graphicData>
-    <maxStorage>300</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
@@ -22,6 +21,7 @@
       <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>5</Beauty>
+      <ES.StorageFactor>4</ES.StorageFactor>      
     </statBases>
     <description>Haulers carry medicine and drugs here for storage.</description>
     <size>(2,1)</size>
@@ -56,6 +56,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ExtendedStorage.ESdef>
+  </ThingDef>
 
 </Buildings>

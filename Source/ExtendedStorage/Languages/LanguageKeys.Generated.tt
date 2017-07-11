@@ -40,7 +40,7 @@ namespace <#= _namespace #> {
     [GeneratedCode("DefGenerator.tt","0.1")]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-	public static partial class GeneratedDefs {
+	public static partial class LanguageKeys {
 <#				foreach (var kvp in _paths) {
 #>
 		public static class <#= kvp.Value #> {

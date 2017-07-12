@@ -7,6 +7,7 @@ _Upgrading to this version in an existing savegame is fully supported._
 - Stored items now correctly use single/some/max stacksize icons for stored items.
 - Storage buildings can be renamed.
 - Changed capacity limits for storage buildings. Buildings no longer have a hard number of items they can store, but a multiplier relative to a regular stack's size. This change leads to - at worst - unchanged capacity (for normal items), a slightly better capacity for small size items, or significantly better capacity for 'odd' stack size items like Chemfuel, Hay or Pills.
+
     Building | New capacity
     --- | ---:
     Basket | 667 %

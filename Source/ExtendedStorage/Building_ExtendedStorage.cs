@@ -10,8 +10,13 @@ using Verse.Sound;
 
 namespace ExtendedStorage
 {
-    public class Building_ExtendedStorage : Building_Storage
+    public interface IUserSettingsOwner : IStoreSettingsParent
     {
+        void Notify_UserSettingsChanged();
+    }
+
+
+    public class Building_ExtendedStorage : Building_Storage, IUserSettingsOwner {
         #region fields
 
         internal Graphic _gfxStoredThing;
@@ -27,16 +32,9 @@ namespace ExtendedStorage
         private Action queuedTickAction;
         internal string label;
 
-        public StorageSettings userSettings;
-
-        internal static Action<ThingFilter, Action> SetSettingsChanged;
+        public UserSettings userSettings;
 
         #endregion
-
-        static Building_ExtendedStorage()
-        {
-            SetSettingsChanged = Access.GetFieldSetter<ThingFilter, Action>("settingsChangedCallback");
-        }
 
 
         #region Properties
@@ -117,7 +115,7 @@ namespace ExtendedStorage
                 Scribe_Values.Look<string>(ref label, "label", def.label, false);
             }
 
-            // we need to re-apply our callback on the userSettings after load.
+
             // in addition, we need some migration code for handling mid-save upgrades.
             // todo: the migration part of this can be removed on the A17 update.
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
@@ -126,7 +124,7 @@ namespace ExtendedStorage
                 if (userSettings == null)
                 {
                     // create 'user' storage settings
-                    userSettings = new StorageSettings(this);
+                    userSettings = new UserSettings(this);
 
                     // copy over previous filter/priority
                     userSettings.filter.CopyAllowancesFrom(settings.filter);
@@ -136,8 +134,6 @@ namespace ExtendedStorage
                     Notify_StoredThingDefChanged();
                 }
 
-                // re-apply callback
-                SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged); 
             }
         }
 
@@ -204,14 +200,11 @@ namespace ExtendedStorage
             base.PostMake();
 
             // create 'user' storage settings
-            userSettings = new StorageSettings(this);
+            userSettings = new UserSettings(this);
 
             // copy over default filter/priority
             if (def.building.defaultStorageSettings != null)
                 userSettings.CopyFrom(def.building.defaultStorageSettings);
-
-            // change callback to point to our custom logic
-            SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged);
         }
 
 
@@ -284,6 +277,7 @@ namespace ExtendedStorage
 
         public void Notify_UserSettingsChanged()
         {
+
             // the vanilla StorageSettings.TryNotifyChanged will alert the SlotGroupManager that 
             // storage settings have changed. We don't need this behaviour for user settings, as these
             // don't directly influence the slotgroup, and any changes we make are propagated to the 

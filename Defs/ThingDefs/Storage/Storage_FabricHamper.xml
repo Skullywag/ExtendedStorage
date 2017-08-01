@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ExtendedStorage.ESdef ParentName="BuildingBase">
+  <ThingDef ParentName="BuildingBase">
     <defName>Storage_FabricHamper</defName>
     <label>Fabric Hamper</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -13,7 +13,6 @@
       <drawSize>(4,2)</drawSize>
       <shaderType>CutoutComplex</shaderType>
     </graphicData>
-    <maxStorage>400</maxStorage>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
@@ -22,6 +21,7 @@
       <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>4</Beauty>
+      <ES.StorageFactor>5.33</ES.StorageFactor>      
     </statBases>
     <description>Haulers carry textiles here for storage.</description>
     <size>(2,1)</size>
@@ -55,6 +55,6 @@
     <tradeTags>
       <li>Furniture</li>
     </tradeTags>
-  </ExtendedStorage.ESdef>
+  </ThingDef>
   
 </Buildings>

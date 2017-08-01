@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>  
+  <StatCategoryDef>
+    <defName>ExtendedStorage</defName>
+    <label>Extended Storage</label>
+    <displayOrder>50</displayOrder>
+    <displayAllByDefault>true</displayAllByDefault>
+  </StatCategoryDef>
+</Defs>

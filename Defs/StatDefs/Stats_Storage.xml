@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <StatDef>
+    <defName>ES.StorageFactor</defName>
+    <label>storage capacity</label>
+    <description>The total amount of items this building can store compared to a regular stack's size.</description>
+    <category>ExtendedStorage</category>
+    <defaultBaseValue>1</defaultBaseValue>
+    <minValue>1</minValue>
+    <toStringStyle>PercentZero</toStringStyle>
+    <showIfUndefined>false</showIfUndefined>
+    <displayPriorityInCategory>0</displayPriorityInCategory>
+  </StatDef>
+
+</Defs>

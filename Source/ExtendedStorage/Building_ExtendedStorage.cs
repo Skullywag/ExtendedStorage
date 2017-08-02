@@ -269,12 +269,22 @@ namespace ExtendedStorage
             base.Tick();
             if (this.IsHashIntervalTick(10))
             {
+                TryGrabOutputItem();
+
                 queuedTickAction?.Invoke();
                 queuedTickAction = null;
 
                 ChunkifyOutputSlot();
 
                 TryMoveItem();
+            }
+        }
+
+        private void TryGrabOutputItem()
+        {
+            if (StoredThingDef == null)
+            {
+                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
             }
         }
 

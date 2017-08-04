@@ -41,7 +41,9 @@ namespace ExtendedStorage
 
         public bool AtCapacity => StoredThingTotal >= ApparentMaxStorage;
 
-        public int ApparentMaxStorage => (int) (StoredThingDef?.stackLimit*this.GetStatValue(DefReferences.Stat_ES_StorageFactor) ?? Int32.MaxValue);
+        public int ApparentMaxStorage => StoredThingDef == null 
+            ? Int32.MaxValue
+            : (int) (StoredThingDef.stackLimit*this.GetStatValue(DefReferences.Stat_ES_StorageFactor));
 
         public IntVec3 OutputSlot => outputSlot;
 
@@ -464,6 +466,7 @@ namespace ExtendedStorage
         private void TryMoveItem()
         {
             Thing input = StoredThingAtInput;
+
             if (input == null)
                 return;
 

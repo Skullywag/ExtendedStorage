@@ -1,4 +1,4 @@
-# Version 2.5(???)
+# Version 3.0
 
 _Upgrading to this version in an existing savegame is fully supported._
 

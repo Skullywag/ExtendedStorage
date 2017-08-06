@@ -10,7 +10,7 @@ using Verse.Sound;
 
 namespace ExtendedStorage
 {
-    public interface IUserSettingsOwner : IStoreSettingsParent
+    public interface IUserSettingsOwner : IStoreSettingsParent, ILoadReferenceable
     {
         void Notify_UserSettingsChanged();
     }
@@ -117,26 +117,14 @@ namespace ExtendedStorage
                 Scribe_Values.Look<string>(ref label, "label", def.label, false);
             }
 
-
             // in addition, we need some migration code for handling mid-save upgrades.
-            // todo: the migration part of this can be removed on the A17 update.
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                // migration
-                if (userSettings == null)
-                {
-                    // create 'user' storage settings
-                    userSettings = new UserSettings(this);
-
-                    // copy over previous filter/priority
-                    userSettings.filter.CopyAllowancesFrom(settings.filter);
-                    userSettings.Priority = settings.Priority;
-
-                    // apply currently stored logic
-                    Notify_StoredThingDefChanged();
+                if (userSettings != null && userSettings.owner == null) {
+                    userSettings.owner = this;
                 }
-
             }
+
         }
 
         public override IEnumerable<Gizmo> GetGizmos()

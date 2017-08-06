@@ -39,6 +39,7 @@
         <filter>
           <categories>
             <li>ResourcesRaw</li>
+            <li>StoneChunks</li>
           </categories>
         </filter>
       </fixedStorageSettings>

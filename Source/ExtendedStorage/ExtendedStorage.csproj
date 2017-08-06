@@ -71,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LanguageKeys.Generated.tt</DependentUpon>
     </Compile>
+    <Compile Include="Patches\CompressibilityDeciderUtility_IsSaveCompressible.cs" />
     <Compile Include="Patches\StorageSettings.cs" />
     <Compile Include="Patches\[GUI]\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />

@@ -1,38 +1,20 @@
 using System;
 using System.Collections.Generic;
+using RimWorld;
 using Verse;
 
 namespace ExtendedStorage
 {
     internal static class StorageUtility
     {
-        public static bool HasSupressedOrSubstituedGraphics(Thing t, out Graphic gfx)
-        {
-            Building_ExtendedStorage b = GetStoringBuilding(t);
-            if ((b != null) && !t.def.IsApparel)
-            {
-                gfx = t == b._suppressedDrawCandidate
-                    ? b._gfxStoredThing
-                    : null;
-                return true;
-            }
-            gfx = null;
-            return false;
-        }
-
         /// <summary>
         ///     Checks if a <see cref="Thing" /> is currently held as one of the <see cref="StoredThings" /> on an
         ///     <see cref="Building_ExtendedStorage" />'s
-        ///     <see cref="OutputSlot" />.
         /// </summary>
         /// <param name="t"><see cref="Thing" /> to check</param>
         public static Building_ExtendedStorage GetStoringBuilding(Thing t)
         {
-            Building_ExtendedStorage b = t.Map?.thingGrid.ThingAt<Building_ExtendedStorage>(t.Position);
-
-            return (b?.OutputSlot == t.Position) && (b.StoredThingDef == t.def)
-                ? b
-                : null;
+            return t.GetSlotGroup()?.parent as Building_ExtendedStorage;
         }
 
         /// <summary>

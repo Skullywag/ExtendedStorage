@@ -23,7 +23,6 @@ namespace ExtendedStorage
         private string _label;
 
         private ThingDef _storedThingDef;
-        internal Thing _suppressedDrawCandidate;
 
         private Func<IEnumerable<Gizmo>> Building_GetGizmos;
         private IntVec3 inputSlot;
@@ -85,7 +84,6 @@ namespace ExtendedStorage
 
         public override string LabelNoCount => label;
 
-
         #endregion
 
         #region Base overrides
@@ -105,6 +103,18 @@ namespace ExtendedStorage
 
             if (!string.IsNullOrEmpty(_label))
                 GenMapUI.DrawThingLabel(StoredThings.First(), _label, labelColor);
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+            if (true == StoredThingDef?.IsApparel)
+                return;
+
+            _gfxStoredThing?.DrawFromDef(
+                Gen.TrueCenter(OutputSlot, Rot4.North, IntVec2.One, Altitudes.AltitudeFor(AltitudeLayer.Item)),
+                Rot4.North,
+                StoredThingDef);
         }
 
         public override void ExposeData()
@@ -556,19 +566,16 @@ namespace ExtendedStorage
                     _gfxStoredThing = (StoredThingDef.graphic as Graphic_StackCount)
                                           ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)
                                       ?? StoredThingDef.graphic;
-                    _suppressedDrawCandidate = items[0];
                 }
                 else
                 {
                     _gfxStoredThing = null;
-                    _suppressedDrawCandidate = null;
                 }
             }
             else
             {
                 _label = null;
                 _gfxStoredThing = null;
-                _suppressedDrawCandidate = null;
             }
         }
     }

@@ -10,7 +10,7 @@ using Verse.Sound;
 
 namespace ExtendedStorage
 {
-    public interface IUserSettingsOwner : IStoreSettingsParent, ILoadReferenceable
+    public interface IUserSettingsOwner : IStoreSettingsParent
     {
         void Notify_UserSettingsChanged();
     }

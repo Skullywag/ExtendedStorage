@@ -121,20 +121,11 @@ namespace ExtendedStorage
         {
             base.ExposeData();
             Scribe_Defs.Look(ref _storedThingDef, "storedThingDef");
-            Scribe_Deep.Look(ref userSettings, "userSettings");
+            Scribe_Deep.Look(ref userSettings, "userSettings", this);
 
             if (Scribe.mode != LoadSaveMode.Saving || this.label != null) {
                 Scribe_Values.Look<string>(ref label, "label", def.label, false);
             }
-
-            // in addition, we need some migration code for handling mid-save upgrades.
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                if (userSettings != null && userSettings.owner == null) {
-                    userSettings.owner = this;
-                }
-            }
-
         }
 
         public override IEnumerable<Gizmo> GetGizmos()

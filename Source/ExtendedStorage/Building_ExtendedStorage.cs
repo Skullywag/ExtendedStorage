@@ -278,6 +278,7 @@ namespace ExtendedStorage
             if (StoredThingDef == null)
             {
                 StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
+                InvalidateThingSection(_storedThingDef);
             }
         }
 
@@ -307,7 +308,24 @@ namespace ExtendedStorage
             else
             {
                 TryUnstackStoredItems();
+                var storedDef = StoredThingDef;
                 StoredThingDef = null;
+                InvalidateThingSection(storedDef);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the storedDef has a mapMesh painting - if so, invalidate the apppropriate SectionLayer (needed for 
+        /// chunks to appear immediately while game is paused &amp; exclusion by filter)
+        /// </summary>
+        private void InvalidateThingSection(ThingDef storedDef)
+        {
+            switch (storedDef?.drawerType)
+            {  
+                case DrawerType.MapMeshOnly:
+                case DrawerType.MapMeshAndRealTime:
+                    Map?.mapDrawer.SectionAt(OutputSlot).RegenerateLayers(MapMeshFlag.Things);
+                    break;
             }
         }
 
@@ -507,7 +525,6 @@ namespace ExtendedStorage
             SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
         }
 
-
         /// <remarks>
         /// we can't really dump items immediately - otherwise typical use scenarios like "clear all, reselect X" would dump items immediately
         /// </remarks>
@@ -524,6 +541,7 @@ namespace ExtendedStorage
                                     if (validThings.Length != 0)
                                         SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
                                 };
+
         }
 
         /// <summary>

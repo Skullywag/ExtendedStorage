@@ -14,7 +14,14 @@ namespace ExtendedStorage
         /// <param name="t"><see cref="Thing" /> to check</param>
         public static Building_ExtendedStorage GetStoringBuilding(Thing t)
         {
-            return t.GetSlotGroup()?.parent as Building_ExtendedStorage;
+            // HACK: GetSlotGroup is weird (ish)
+            var b = t is Building_ExtendedStorage
+                ? null
+                : t.GetSlotGroup()?.parent as Building_ExtendedStorage;
+
+            return b?.StoredThingDef == t.def
+                ? b
+                : null;
         }
 
         /// <summary>

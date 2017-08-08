@@ -61,8 +61,8 @@ namespace ExtendedStorage
         /// <summary>
         /// Add debug dropdown to toggle displayed settings to tab. Only visible in GodMode.
         /// </summary>
-        public static void Postfix() {
-            if (!DebugSettings.godMode)
+        public static void Postfix(RimWorld.ITab_Storage __instance) {
+            if (!DebugSettings.godMode || !(__instance is ITab_Storage))
                 return;
 
             Rect rect = new Rect(160f+10f+5f, 10f, 100f, 29f);

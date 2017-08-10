@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Patches\CompressibilityDeciderUtility_IsSaveCompressible.cs" />
     <Compile Include="Patches\StorageSettings.cs" />
+    <Compile Include="Patches\Thing_SplitOff.cs" />
     <Compile Include="Patches\[GUI]\FloatMenuMakerMap_AddHumanlikeOrders.cs" />
     <Compile Include="Patches\ITab_Storage_FillTab.cs" />
     <Compile Include="Patches\MinifyUtility_MakeMinified.cs" />

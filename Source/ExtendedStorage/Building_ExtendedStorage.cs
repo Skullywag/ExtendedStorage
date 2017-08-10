@@ -538,7 +538,7 @@ namespace ExtendedStorage
         /// <summary>
         /// Update necessary data for label &amp; icon overrides
         /// </summary>
-        private void UpdateCachedAttributes()
+        public void UpdateCachedAttributes()
         {
             if (StoredThingDef != null)
             {

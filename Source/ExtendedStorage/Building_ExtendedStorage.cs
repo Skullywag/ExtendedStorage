@@ -514,6 +514,7 @@ namespace ExtendedStorage
 
             SplurgeThings(storedThings, outputSlot, true);
             SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
+            StoredThingDef = null;
         }
 
         /// <remarks>

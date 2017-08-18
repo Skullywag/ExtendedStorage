@@ -5,6 +5,7 @@
 - Changes to storage priority correctly trigger hauling jobs to & from Extended Storage buildings
 - Correctly update total item count label when partial stack is used from output slot.
 - Move single non-max stacks from input cell to output.
+- Fix error for reinstalled non empty Extended Storage buildings.
 - Disallowing & reallowing a stored item while paused will no longer eject the stored item from storage after unpause.
 
 ## New features

@@ -10,15 +10,19 @@ using Verse.Sound;
 
 namespace ExtendedStorage
 {
-    public class Building_ExtendedStorage : Building_Storage
+    public interface IUserSettingsOwner : IStoreSettingsParent
     {
+        void Notify_UserSettingsChanged();
+    }
+
+
+    public class Building_ExtendedStorage : Building_Storage, IUserSettingsOwner {
         #region fields
 
         internal Graphic _gfxStoredThing;
         private string _label;
 
         private ThingDef _storedThingDef;
-        internal Thing _suppressedDrawCandidate;
 
         private Func<IEnumerable<Gizmo>> Building_GetGizmos;
         private IntVec3 inputSlot;
@@ -27,23 +31,18 @@ namespace ExtendedStorage
         private Action queuedTickAction;
         internal string label;
 
-        public StorageSettings userSettings;
-
-        internal static Action<ThingFilter, Action> SetSettingsChanged;
+        public UserSettings userSettings;
 
         #endregion
-
-        static Building_ExtendedStorage()
-        {
-            SetSettingsChanged = Access.GetFieldSetter<ThingFilter, Action>("settingsChangedCallback");
-        }
 
 
         #region Properties
 
         public bool AtCapacity => StoredThingTotal >= ApparentMaxStorage;
 
-        public int ApparentMaxStorage => (int) (StoredThingDef?.stackLimit*this.GetStatValue(DefReferences.Stat_ES_StorageFactor) ?? Int32.MaxValue);
+        public int ApparentMaxStorage => StoredThingDef == null 
+            ? Int32.MaxValue
+            : (int) (StoredThingDef.stackLimit*this.GetStatValue(DefReferences.Stat_ES_StorageFactor));
 
         public IntVec3 OutputSlot => outputSlot;
 
@@ -85,7 +84,6 @@ namespace ExtendedStorage
 
         public override string LabelNoCount => label;
 
-
         #endregion
 
         #region Base overrides
@@ -107,37 +105,26 @@ namespace ExtendedStorage
                 GenMapUI.DrawThingLabel(StoredThings.First(), _label, labelColor);
         }
 
+        public override void Draw()
+        {
+            base.Draw();
+            if (true == StoredThingDef?.IsApparel)
+                return;
+
+            _gfxStoredThing?.DrawFromDef(
+                Gen.TrueCenter(OutputSlot, Rot4.North, IntVec2.One, Altitudes.AltitudeFor(AltitudeLayer.Item)),
+                Rot4.North,
+                StoredThingDef);
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Defs.Look(ref _storedThingDef, "storedThingDef");
-            Scribe_Deep.Look(ref userSettings, "userSettings");
+            Scribe_Deep.Look(ref userSettings, "userSettings", this);
 
             if (Scribe.mode != LoadSaveMode.Saving || this.label != null) {
                 Scribe_Values.Look<string>(ref label, "label", def.label, false);
-            }
-
-            // we need to re-apply our callback on the userSettings after load.
-            // in addition, we need some migration code for handling mid-save upgrades.
-            // todo: the migration part of this can be removed on the A17 update.
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                // migration
-                if (userSettings == null)
-                {
-                    // create 'user' storage settings
-                    userSettings = new StorageSettings(this);
-
-                    // copy over previous filter/priority
-                    userSettings.filter.CopyAllowancesFrom(settings.filter);
-                    userSettings.Priority = settings.Priority;
-
-                    // apply currently stored logic
-                    Notify_StoredThingDefChanged();
-                }
-
-                // re-apply callback
-                SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged); 
             }
         }
 
@@ -204,14 +191,11 @@ namespace ExtendedStorage
             base.PostMake();
 
             // create 'user' storage settings
-            userSettings = new StorageSettings(this);
+            userSettings = new UserSettings(this);
 
             // copy over default filter/priority
             if (def.building.defaultStorageSettings != null)
                 userSettings.CopyFrom(def.building.defaultStorageSettings);
-
-            // change callback to point to our custom logic
-            SetSettingsChanged(userSettings.filter, Notify_UserSettingsChanged);
         }
 
 
@@ -269,6 +253,8 @@ namespace ExtendedStorage
             base.Tick();
             if (this.IsHashIntervalTick(10))
             {
+                TryGrabOutputItem();
+
                 queuedTickAction?.Invoke();
                 queuedTickAction = null;
 
@@ -278,12 +264,22 @@ namespace ExtendedStorage
             }
         }
 
+        private void TryGrabOutputItem()
+        {
+            if (StoredThingDef == null)
+            {
+                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
+                InvalidateThingSection(_storedThingDef);
+            }
+        }
+
         #endregion
 
         #region Notification handlers
 
         public void Notify_UserSettingsChanged()
         {
+
             // the vanilla StorageSettings.TryNotifyChanged will alert the SlotGroupManager that 
             // storage settings have changed. We don't need this behaviour for user settings, as these
             // don't directly influence the slotgroup, and any changes we make are propagated to the 
@@ -303,7 +299,24 @@ namespace ExtendedStorage
             else
             {
                 TryUnstackStoredItems();
+                var storedDef = StoredThingDef;
                 StoredThingDef = null;
+                InvalidateThingSection(storedDef);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the storedDef has a mapMesh painting - if so, invalidate the apppropriate SectionLayer (needed for 
+        /// chunks to appear immediately while game is paused &amp; exclusion by filter)
+        /// </summary>
+        private void InvalidateThingSection(ThingDef storedDef)
+        {
+            switch (storedDef?.drawerType)
+            {  
+                case DrawerType.MapMeshOnly:
+                case DrawerType.MapMeshAndRealTime:
+                    Map?.mapDrawer.SectionAt(OutputSlot).RegenerateLayers(MapMeshFlag.Things);
+                    break;
             }
         }
 
@@ -460,6 +473,7 @@ namespace ExtendedStorage
         private void TryMoveItem()
         {
             Thing input = StoredThingAtInput;
+
             if (input == null)
                 return;
 
@@ -500,8 +514,8 @@ namespace ExtendedStorage
 
             SplurgeThings(storedThings, outputSlot, true);
             SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
+            StoredThingDef = null;
         }
-
 
         /// <remarks>
         /// we can't really dump items immediately - otherwise typical use scenarios like "clear all, reselect X" would dump items immediately
@@ -519,12 +533,13 @@ namespace ExtendedStorage
                                     if (validThings.Length != 0)
                                         SoundDef.Named("DropPodOpen").PlayOneShot(new TargetInfo(outputSlot, Map, false));
                                 };
+
         }
 
         /// <summary>
         /// Update necessary data for label &amp; icon overrides
         /// </summary>
-        private void UpdateCachedAttributes()
+        public void UpdateCachedAttributes()
         {
             if (StoredThingDef != null)
             {
@@ -561,19 +576,16 @@ namespace ExtendedStorage
                     _gfxStoredThing = (StoredThingDef.graphic as Graphic_StackCount)
                                           ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)
                                       ?? StoredThingDef.graphic;
-                    _suppressedDrawCandidate = items[0];
                 }
                 else
                 {
                     _gfxStoredThing = null;
-                    _suppressedDrawCandidate = null;
                 }
             }
             else
             {
                 _label = null;
                 _gfxStoredThing = null;
-                _suppressedDrawCandidate = null;
             }
         }
     }

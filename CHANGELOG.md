@@ -1,4 +1,19 @@
-# Version 2.5(???)
+# Version 3.0.1
+
+
+## Bugfixes
+- Changes to storage priority correctly trigger hauling jobs to & from Extended Storage buildings
+- Correctly update total item count label when partial stack is used from output slot.
+- Move single non-max stacks from input cell to output.
+- Fix error for reinstalled non empty Extended Storage buildings.
+- Disallowing & reallowing a stored item while paused will no longer eject the stored item from storage after unpause.
+
+## New features
+- Skip now officially supports storing stone chunks
+- (Debug) options in God mode (Allow switching displayed filter between User & Storage settings. User settings are default, storage settings are what is actually currently stored in the building).
+- Upgrade Harmony to 1.0.9.1
+
+# Version 3.0
 
 _Upgrading to this version in an existing savegame is fully supported._
 

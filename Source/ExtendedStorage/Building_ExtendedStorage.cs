@@ -221,7 +221,7 @@ namespace ExtendedStorage
             outputSlot = list[1];
 
             if (this.label == null || this.label.Trim().Length == 0)
-                this.label = base.def.label;
+                this.label = GenLabel.ThingLabel(this);
         }
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats {

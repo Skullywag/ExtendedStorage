@@ -10,7 +10,7 @@
     <graphicData>
       <texPath>Things/Building/Furniture/FreezerChest</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawsize>2,1</drawsize>
+      <drawSize>2,1</drawSize>
     </graphicData>
     <maxStorage>500</maxStorage>
     <altitudeLayer>Building</altitudeLayer>

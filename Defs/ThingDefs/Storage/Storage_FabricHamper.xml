@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Buildings>
+<Defs>
 
   <!--============================== Storage ===========================-->
 
@@ -21,7 +21,7 @@
       <WorkToBuild>580</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>4</Beauty>
-      <ES.StorageFactor>5.33</ES.StorageFactor>      
+      <ES_StorageFactor>5.33</ES_StorageFactor>      
     </statBases>
     <description>Haulers carry textiles here for storage.</description>
     <size>(2,1)</size>
@@ -57,4 +57,4 @@
     </tradeTags>
   </ThingDef>
   
-</Buildings>
+</Defs>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Buildings>
+<Defs>
 
   <!--============================== Storage ===========================-->
 
@@ -11,7 +11,7 @@
     <graphicData>
       <texPath>Things/Building/Furniture/Skip/Skip</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
-      <drawsize>(3,2)</drawsize>
+      <drawSize>(3,2)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
@@ -21,7 +21,7 @@
       <WorkToBuild>780</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
-      <ES.StorageFactor>12</ES.StorageFactor>        
+      <ES_StorageFactor>12</ES_StorageFactor>        
     </statBases>
     <stuffCategories>
       <li>Metallic</li>
@@ -57,4 +57,4 @@
     </tradeTags>
   </ThingDef>
 
-</Buildings>
+</Defs>

@@ -15,7 +15,7 @@ namespace ExtendedStorage {
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public partial class DefNames {
-		public const string @Stat_ES_StorageFactor = @"ES.StorageFactor";
+		public const string @Stat_ES_StorageFactor = @"ES_StorageFactor";
 		public const string @StatCategory_ExtendedStorage = @"ExtendedStorage";
 	}
 	[GeneratedCode("Defs.Generated.tt","0.1")]

@@ -24,7 +24,7 @@
 	AddDef<StatCategoryDef>("ExtendedStorage");
 
 
-	AddDef<StatDef>("ES.StorageFactor");
+	AddDef<StatDef>("ES_StorageFactor");
 
 	// ^^^^^^^^^ Add your desired definitions ABOVE this line ^^^^^^^^^
 #>// ------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 <Defs>
 
   <StatDef>
-    <defName>ES.StorageFactor</defName>
+    <defName>ES_StorageFactor</defName>
     <label>storage capacity</label>
     <description>The total amount of items this building can store compared to a regular stack's size.</description>
     <category>ExtendedStorage</category>

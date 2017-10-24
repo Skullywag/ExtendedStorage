@@ -1,4 +1,4 @@
-[![RimWorld Alpha 17](https://img.shields.io/badge/RimWorld-Alpha%2017-brightgreen.svg)](http://rimworldgame.com/)
+[![RimWorld Alpha 18](https://img.shields.io/badge/RimWorld-Alpha%2018-yellow.svg)](http://rimworldgame.com/)
 
 # Extended Storage
 

@@ -43,9 +43,9 @@
             <li>Manufactured</li>
             <li>PlantMatter</li>
             <li>Drugs</li>
+            <li>MortarShells</li>
           </categories>
           <thingDefs>
-            <li>MortarShell</li>
             <li>Hay</li>
           </thingDefs>
         </filter>

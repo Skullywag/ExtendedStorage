@@ -42,3 +42,7 @@
 *.RTF diff=astextplain
 
 *.cs diff=csharp
+
+
+.git* export-ignore
+Source/ export-ignore

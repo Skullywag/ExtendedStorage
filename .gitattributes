@@ -46,3 +46,4 @@
 
 .git* export-ignore
 Source/ export-ignore
+*.psd export-ignore

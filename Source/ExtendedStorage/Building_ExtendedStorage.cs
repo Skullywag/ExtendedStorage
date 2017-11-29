@@ -46,6 +46,8 @@ namespace ExtendedStorage
 
         public IntVec3 OutputSlot => outputSlot;
 
+        public IntVec3 InputSlot => inputSlot;
+
         internal ThingDef StoredThingDef
         {
             get { return _storedThingDef; }

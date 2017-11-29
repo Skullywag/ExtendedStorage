@@ -27,7 +27,7 @@ namespace ExtendedStorage
                 thing.def == target.StoredThingDef
 
                 // target is not full
-                && target.StoredThingTotal < target.ApparentMaxStorage
+                && !target.AtCapacity
 
                 // source stack is smaller or equal in size to target
                 && source.StoredThingTotal <= target.StoredThingTotal

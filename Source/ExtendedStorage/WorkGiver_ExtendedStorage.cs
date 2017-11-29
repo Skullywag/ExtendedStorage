@@ -14,7 +14,6 @@ namespace ExtendedStorage
             return pawn.Map.listerBuildings.AllBuildingsColonistOfClass<Building_ExtendedStorage>()
                 .Where( b => !b.AtCapacity 
                         && !b.IsForbidden( pawn )
-                        && b.StoredThingDef != null 
                         && b.StoredThingTotal > 0 )
                 .SelectMany( b => b.StoredThings )
                 .Where( t => t.TheoreticallyStackable( pawn ) );

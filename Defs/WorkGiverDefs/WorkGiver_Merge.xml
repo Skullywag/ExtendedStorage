@@ -8,7 +8,7 @@
         <emergency>false</emergency>
         <verb>tidy up storage</verb>
         <gerund>tidying up storage</gerund>
-        <priorityInType>99</priorityInType>
+        <priorityInType>1</priorityInType>
         <requiredCapacities>
             <li>Manipulation</li>
         </requiredCapacities>

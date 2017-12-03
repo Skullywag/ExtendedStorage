@@ -1,3 +1,7 @@
+# Version 3.2.0
+
+Implement stack merging by fluffy
+
 # Version 3.1.0
 
 Experimental A18 version (compiles & starts, basic functionality tested... may still show weird behavior)

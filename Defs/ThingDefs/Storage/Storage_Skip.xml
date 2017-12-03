@@ -41,6 +41,9 @@
             <li>ResourcesRaw</li>
             <li>StoneChunks</li>
           </categories>
+          <thingDefs>
+            <li>ChunkSlagSteel</li>
+          </thingDefs>
         </filter>
       </fixedStorageSettings>
     </building>

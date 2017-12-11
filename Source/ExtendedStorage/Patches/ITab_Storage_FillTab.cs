@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
@@ -96,7 +97,7 @@ namespace ExtendedStorage
         /// </remarks>
         /// <seealso cref="GetSettings" />
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr, ILGenerator ilgen)
-        {
+        {                                    
             /*  Don't completely replace the base implementation. Only change the absolutely bare minimum.
              *  
              *  For us, this is a different value of the <c>IStoreSettingsParent</c> & <c>StorageSettings</c> local
@@ -109,38 +110,32 @@ namespace ExtendedStorage
 
             List<CodeInstruction> instructions = new List<CodeInstruction>(instr);
 
-            /*      IL Changes:
-             
-			                newobj		instance void RimWorld.ITab_Storage/'<FillTab>c__AnonStorey452'::.ctor()
-	                +1	>>>	dup			# we could do stloc+ldloc, but dup+stloc is shorter ;)
-			                stloc.s		8
-			                ldarg.0
-	                -5	<<<	call		instance class RimWorld.IStoreSettingsParent RimWorld.ITab_Storage::get_SelStoreSettingsParent()
-	                +2	>>>	ldloca.s	0
-	                +5	>>>	call		class ['Assembly-CSharp']RimWorld.StorageSettings ExtendedStorage.ITab_Storage_FillTab::GetSettings(class ['Assembly-CSharp']RimWorld.ITab_Storage, class ['Assembly-CSharp']RimWorld.IStoreSettingsParent&)
-	                -1	<<<	stloc.0
-	                -2	<<<	ldloc.s		8
-	                -1	<<<	ldloc.0
-	                -5	<<<	callvirt	instance class RimWorld.StorageSettings RimWorld.IStoreSettingsParent::GetStoreSettings()
-	                +1	>>>	nop         # restore byte length
-	                +1	>>>	nop         # restore byte length
-	                +1	>>>	nop         # restore byte length
-	                +1	>>>	nop         # restore byte length
-	                +1	>>>	nop         # restore byte length
-	                +1	>>>	nop         # restore byte length
-                            stfld 		class RimWorld.StorageSettings RimWorld.ITab_Storage/'<FillTab>c__AnonStorey452'::settings
-                            ...
-            */
+            ConstructorInfo ciAnonWrapper = (ConstructorInfo) instructions[0].operand;
+
+            var tAnonWrapper = ciAnonWrapper.DeclaringType;
+            var fiSettings = tAnonWrapper.GetFields(BindingFlags.Instance | BindingFlags.NonPublic).First(fi => fi.FieldType == typeof(StorageSettings));
+
+            var idxStFld = instructions.FindIndex(2, ci => ci.opcode == OpCodes.Stfld && ci.operand == fiSettings);
+            if (idxStFld == -1)
+            {
+                Log.Warning("Could not find anchor for ITab_Storage.FillTab anchor - not transpiling code.");
+                return instructions;
+            }
+
+            // remove vanilla instructions
+            for (int idx = idxStFld - 1; idx > 1; idx--) {
+                instructions.RemoveAt(idx);
+            }
+            // after removing the intermediate stuff the 'stfld' is now at index #2
+            instructions.InsertRange(2,
+                                     new[]
+                                     {
+                                         new CodeInstruction(OpCodes.Ldarg_0), 
+                                         new CodeInstruction(OpCodes.Ldloca_S, 1),
+                                         new CodeInstruction(OpCodes.Call, typeof(ITab_Storage_FillTab).GetMethod(nameof(GetSettings)))
+                                     });
+
             instructions.Insert(1, new CodeInstruction(OpCodes.Dup));
-            instructions.RemoveAt(4);
-            instructions.Insert(4, new CodeInstruction(OpCodes.Ldloca_S, 0));
-            instructions.Insert(5, new CodeInstruction(OpCodes.Call, typeof(ITab_Storage_FillTab).GetMethod(nameof(GetSettings))));
-            instructions.RemoveAt(6);
-            instructions.RemoveAt(6);
-            instructions.RemoveAt(6);
-            instructions.RemoveAt(6);
-            for (int i = 1; i <= 6; i++)
-                instructions.Insert(6, new CodeInstruction(OpCodes.Nop));
 
             return instructions;
         }

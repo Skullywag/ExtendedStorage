@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="ExtendedStorageMod.cs" />
     <Compile Include="Building_ExtendedStorage.cs" />
+    <Compile Include="Extensions_StackMerging.cs" />
     <Compile Include="ITab_Storage_UserSettings.cs" />
     <Compile Include="Defs.Generated.cs">
       <AutoGen>True</AutoGen>
@@ -86,6 +87,7 @@
     <Compile Include="Utility\AccessUtility.cs" />
     <Compile Include="Utility\EnumUtility.cs" />
     <Compile Include="Utility\StorageUtility.cs" />
+    <Compile Include="WorkGiver_ExtendedStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Languages\LanguageKeys.Generated.tt">

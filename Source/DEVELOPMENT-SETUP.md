@@ -10,7 +10,7 @@ If you're keeping just a copy of the managed assemblies simply make sure the `Ri
 If you want to be a particularly conscientious developer, run
 
 ```bash
-git update-index --skip-worktree Source\Rimworldinstall.props
+git update-index --skip-worktree Source\RimworldInstall.props
 ```
 
 after setting up your local version of the file. Then git will never upload your modified version.

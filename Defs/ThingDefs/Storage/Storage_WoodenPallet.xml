@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Buildings>
+<Defs>
 
   <!--============================== Storage ===========================-->
 
@@ -10,7 +10,7 @@
     <graphicData>
       <texPath>Things/Building/Furniture/Pallet/Pallet</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
-      <drawsize>(4,3)</drawsize>
+      <drawSize>(4,3)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
@@ -20,7 +20,7 @@
       <WorkToBuild>780</WorkToBuild>
       <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
-      <ES.StorageFactor>8</ES.StorageFactor>        
+      <ES_StorageFactor>8</ES_StorageFactor>        
     </statBases>
     <description>Haulers carry materials here for storage.</description>
     <size>(2,1)</size>
@@ -34,7 +34,7 @@
     </killedLeavings>
     <filthLeaving>BuildingRubble</filthLeaving>
     <building>
-      <preventDeterioration>true</preventDeterioration>
+      <preventDeteriorationOnTop>true</preventDeteriorationOnTop>
       <fixedStorageSettings>
         <priority>Important</priority>
         <filter>
@@ -43,9 +43,9 @@
             <li>Manufactured</li>
             <li>PlantMatter</li>
             <li>Drugs</li>
+            <li>MortarShells</li>
           </categories>
           <thingDefs>
-            <li>MortarShell</li>
             <li>Hay</li>
           </thingDefs>
         </filter>
@@ -64,4 +64,4 @@
     </tradeTags>
   </ThingDef>
 
-</Buildings>
+</Defs>

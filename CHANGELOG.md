@@ -1,5 +1,12 @@
-# Version 3.0.1
+# Version 3.2.0
 
+Implement stack merging by fluffy
+
+# Version 3.1.0
+
+Experimental A18 version (compiles & starts, basic functionality tested... may still show weird behavior)
+
+# Version 3.0.1
 
 ## Bugfixes
 - Changes to storage priority correctly trigger hauling jobs to & from Extended Storage buildings

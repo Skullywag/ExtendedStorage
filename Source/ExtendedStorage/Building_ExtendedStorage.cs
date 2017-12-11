@@ -46,6 +46,8 @@ namespace ExtendedStorage
 
         public IntVec3 OutputSlot => outputSlot;
 
+        public IntVec3 InputSlot => inputSlot;
+
         internal ThingDef StoredThingDef
         {
             get { return _storedThingDef; }
@@ -82,7 +84,7 @@ namespace ExtendedStorage
 
         public int StoredThingTotal => StoredThings.Sum(t => t.stackCount);
 
-        public override string LabelNoCount => label;
+        public override string LabelNoCount => label ?? (label = InitialLabel());
 
         #endregion
 
@@ -220,8 +222,14 @@ namespace ExtendedStorage
             inputSlot = list[0];
             outputSlot = list[1];
 
-            if (this.label == null || this.label.Trim().Length == 0)
-                this.label = base.def.label;
+            if (this.label == null || this.label.Trim().Length == 0) {
+                this.label = InitialLabel();
+            }
+        }
+
+        private string InitialLabel()
+        {
+            return GenLabel.ThingLabel(this);
         }
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats {

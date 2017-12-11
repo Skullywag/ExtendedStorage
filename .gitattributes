@@ -42,3 +42,9 @@
 *.RTF diff=astextplain
 
 *.cs diff=csharp
+
+
+.git* export-ignore
+Source/ export-ignore
+*.psd export-ignore
+Textures/Things/Building/Furniture/MedCab/trays.png export-ignore

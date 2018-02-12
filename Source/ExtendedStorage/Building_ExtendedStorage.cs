@@ -104,7 +104,11 @@ namespace ExtendedStorage
             Color labelColor = new Color(1f, 1f, 0.5f, 0.75f); // yellowish white for our total stack counts - default is GenMapUI.DefaultThingLabelColor
 
             if (!string.IsNullOrEmpty(_label))
-                GenMapUI.DrawThingLabel(StoredThings.First(), _label, labelColor);
+            {
+                var thing = StoredThings.FirstOrDefault();
+                if (thing != null)
+                    GenMapUI.DrawThingLabel(thing, _label, labelColor);
+            }
         }
 
         public override void Draw()

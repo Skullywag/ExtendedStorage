@@ -64,7 +64,7 @@ namespace ExtendedStorage
         {
             get
             {
-                return Find.VisibleMap.thingGrid.ThingsAt(inputSlot)
+                return Map.thingGrid.ThingsAt(inputSlot)
                            .FirstOrDefault(
                                StoredThingDef != null
                                    ? (Func<Thing, bool>) (t => t.def == StoredThingDef)
@@ -78,7 +78,7 @@ namespace ExtendedStorage
             {
                 if (StoredThingDef == null)
                     return Enumerable.Empty<Thing>();
-                return Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(t => t.def == StoredThingDef);
+                return Map.thingGrid.ThingsAt(outputSlot).Where(t => t.def == StoredThingDef);
             }
         }
 
@@ -280,7 +280,7 @@ namespace ExtendedStorage
         {
             if (StoredThingDef == null)
             {
-                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
+                StoredThingDef = Map.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
                 InvalidateThingSection(_storedThingDef);
             }
         }
@@ -428,7 +428,7 @@ namespace ExtendedStorage
         {
             if (StoredThingDef == null)
             {
-                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot)
+                StoredThingDef = Map.thingGrid.ThingsAt(outputSlot)
                                      .FirstOrDefault(t => settings.filter.Allows(t))
                                      ?.def;
             }

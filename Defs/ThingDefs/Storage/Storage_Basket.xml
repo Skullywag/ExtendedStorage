@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-
   <ThingDef Name="BuildingBase" Abstract="True">
     <category>Building</category>
     <thingClass>Building</thingClass>
-    <soundImpactDefault>BulletImpactMetal</soundImpactDefault>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
     <selectable>true</selectable>
     <drawerType>MapMeshAndRealTime</drawerType>
     <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
     <repairEffect>Repair</repairEffect>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
-    <filthLeaving>BuildingRubble</filthLeaving>
+    <filthLeaving>Filth_RubbleBuilding</filthLeaving>
     <drawGUIOverlay>true</drawGUIOverlay>
   </ThingDef>
 
+  <ThingDef Name="FurnitureBase" ParentName="BuildingBase" Abstract="True">
+    <designationCategory>Furniture</designationCategory>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <statBases>
+      <Mass>20</Mass>
+      <MaxHitPoints>100</MaxHitPoints>
+      <WorkToBuild>580</WorkToBuild>
+      <Flammability>1.0</Flammability>      
+    </statBases>    
+    <thingCategories>
+      <li>BuildingsFurniture</li>
+    </thingCategories>
+    <tradeTags>
+      <li>Furniture</li>
+    </tradeTags>    
+  </ThingDef>
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="FurnitureBase">
     <defName>Storage_Basket</defName>
     <label>Food Basket</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -30,9 +45,6 @@
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
-      <MaxHitPoints>100</MaxHitPoints>
-      <WorkToBuild>580</WorkToBuild>
-      <Flammability>1.0</Flammability>
       <Beauty>8</Beauty>
       <ES_StorageFactor>6.67</ES_StorageFactor>
     </statBases>
@@ -46,7 +58,6 @@
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
-    <filthLeaving>BuildingRubble</filthLeaving>
     <building>
       <preventDeteriorationOnTop>true</preventDeteriorationOnTop>
       <fixedStorageSettings>
@@ -58,7 +69,7 @@
             <li>Drugs</li>
           </categories>
           <thingDefs>
-            <li>HerbalMedicine</li>
+            <li>MedicineHerbal</li>
             <li>Pemmican</li>
             <li>Kibble</li>
           </thingDefs>
@@ -69,13 +80,7 @@
       <li>ExtendedStorage.ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
-    <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>
-    <minifiedDef>MinifiedFurniture</minifiedDef>
-    <tradeTags>
-      <li>Furniture</li>
-    </tradeTags>
   </ThingDef>
-
 </Defs>

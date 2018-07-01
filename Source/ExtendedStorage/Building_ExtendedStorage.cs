@@ -16,6 +16,7 @@ namespace ExtendedStorage
     }
 
 
+
     public class Building_ExtendedStorage : Building_Storage, IUserSettingsOwner {
         #region fields
 
@@ -34,7 +35,6 @@ namespace ExtendedStorage
         public UserSettings userSettings;
 
         #endregion
-
 
         #region Properties
 
@@ -64,7 +64,7 @@ namespace ExtendedStorage
         {
             get
             {
-                return Find.VisibleMap.thingGrid.ThingsAt(inputSlot)
+                return Map?.thingGrid.ThingsAt(inputSlot)
                            .FirstOrDefault(
                                StoredThingDef != null
                                    ? (Func<Thing, bool>) (t => t.def == StoredThingDef)
@@ -78,7 +78,7 @@ namespace ExtendedStorage
             {
                 if (StoredThingDef == null)
                     return Enumerable.Empty<Thing>();
-                return Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(t => t.def == StoredThingDef);
+                return Map?.thingGrid.ThingsAt(outputSlot).Where(t => t.def == StoredThingDef);
             }
         }
 
@@ -118,7 +118,7 @@ namespace ExtendedStorage
                 return;
 
             _gfxStoredThing?.DrawFromDef(
-                Gen.TrueCenter(OutputSlot, Rot4.North, IntVec2.One, Altitudes.AltitudeFor(AltitudeLayer.Item)),
+                GenThing.TrueCenter(OutputSlot, Rot4.North, IntVec2.One, Altitudes.AltitudeFor(AltitudeLayer.Item)),
                 Rot4.North,
                 StoredThingDef);
         }
@@ -233,30 +233,27 @@ namespace ExtendedStorage
 
         private string InitialLabel()
         {
-            return GenLabel.ThingLabel(this);
+            return GenLabel.ThingLabel(this, 1, false);
         }
 
-        public override IEnumerable<StatDrawEntry> SpecialDisplayStats {
-            get
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats() {            
+            foreach (StatDrawEntry specialDisplayStat in base.SpecialDisplayStats())
             {
-                foreach (StatDrawEntry specialDisplayStat in base.SpecialDisplayStats)
-                {
-                    yield return specialDisplayStat;
-                }
-
-                yield return new StatDrawEntry(
-                                 DefReferences.StatCategory_ExtendedStorage,
-                                 LanguageKeys.keyed.ExtendedStorage_CurrentlyStoringStat.Translate(),
-                                 StoredThingDef?.LabelCap ?? LanguageKeys.keyed.ExtendedStorage_Nothing.Translate(),
-                                 -1);
-                yield return new StatDrawEntry(
-                                 DefReferences.StatCategory_ExtendedStorage,
-                                 LanguageKeys.keyed.ExtendedStorage_UsageStat.Translate(),
-                                 StoredThingDef != null 
-                                    ? LanguageKeys.keyed.ExtendedStorage_UsageStat_Value.Translate(StoredThingTotal, ApparentMaxStorage)
-                                    : LanguageKeys.keyed.ExtendedStorage_NA.Translate(),
-                                 -2);
+                yield return specialDisplayStat;
             }
+
+            yield return new StatDrawEntry(
+                                DefReferences.StatCategory_ExtendedStorage,
+                                LanguageKeys.keyed.ExtendedStorage_CurrentlyStoringStat.Translate(),
+                                StoredThingDef?.LabelCap ?? LanguageKeys.keyed.ExtendedStorage_Nothing.Translate(),
+                                -1);
+            yield return new StatDrawEntry(
+                                DefReferences.StatCategory_ExtendedStorage,
+                                LanguageKeys.keyed.ExtendedStorage_UsageStat.Translate(),
+                                StoredThingDef != null 
+                                ? LanguageKeys.keyed.ExtendedStorage_UsageStat_Value.Translate(StoredThingTotal, ApparentMaxStorage)
+                                : LanguageKeys.keyed.ExtendedStorage_NA.Translate(),
+                                -2);            
         }
 
 
@@ -280,12 +277,20 @@ namespace ExtendedStorage
         {
             if (StoredThingDef == null)
             {
-                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
+                StoredThingDef = Map?.thingGrid.ThingsAt(outputSlot).Where(userSettings.AllowedToAccept).FirstOrDefault()?.def;
                 InvalidateThingSection(_storedThingDef);
             }
         }
 
         #endregion
+
+        StorageSettings IStoreSettingsParent.GetStoreSettings()
+        {
+            if (DebugSettings.godMode && ITab_Storage_FillTab.showStoreSettings)
+                return base.GetStoreSettings();
+
+            return userSettings;
+        }
 
         #region Notification handlers
 
@@ -417,7 +422,7 @@ namespace ExtendedStorage
                     GenSpawn.Spawn(t, OutputSlot, Map);
                 }
             }
-            foreach (Thing thing in nonLimitStacks)
+            foreach (Thing thing in nonLimitStacks.Where(t => !t.Destroyed))
                 thing.Destroy(DestroyMode.Vanish);
         }
 
@@ -428,7 +433,7 @@ namespace ExtendedStorage
         {
             if (StoredThingDef == null)
             {
-                StoredThingDef = Find.VisibleMap.thingGrid.ThingsAt(outputSlot)
+                StoredThingDef = Map?.thingGrid.ThingsAt(outputSlot)
                                      .FirstOrDefault(t => settings.filter.Allows(t))
                                      ?.def;
             }

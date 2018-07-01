@@ -19,13 +19,14 @@ namespace ExtendedStorage
                 .Where( t => t.TheoreticallyStackable( pawn ) );
         }
 
-        public override bool ShouldSkip( Pawn pawn )
+        public override bool ShouldSkip( Pawn pawn, bool forced = false )
         {
             return !PotentialWorkThingsGlobal( pawn ).Any();
         }
 
         public override Job JobOnThing( Pawn pawn, Thing thing, bool forced = false )
         {
+            
             // do some more intensive checks
             if ( !HaulAIUtility.PawnCanAutomaticallyHaulFast( pawn, thing, forced ) )
                 return null;
@@ -33,8 +34,8 @@ namespace ExtendedStorage
             // try get a target cell
             IntVec3 target;
             if ( TryGetTargetCell( pawn, thing, out target ) )
-                return HaulAIUtility.HaulMaxNumToCellJob( pawn, thing, target, true );
-
+                return HaulAIUtility.HaulToCellStorageJob( pawn, thing, target, true );
+                
             return null;
         }
 

@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="FurnitureBase">
     <defName>Storage_HazMatContainer</defName>
     <label>HazMat Container</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -16,9 +16,6 @@
     <passability>PassThroughOnly</passability>
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
-      <MaxHitPoints>100</MaxHitPoints>
-      <WorkToBuild>580</WorkToBuild>
-      <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
       <ES_StorageFactor>2.5</ES_StorageFactor>        
     </statBases>
@@ -31,7 +28,6 @@
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
-    <filthLeaving>BuildingRubble</filthLeaving>
     <building>
       <fixedStorageSettings>
         <priority>Important</priority>
@@ -46,13 +42,8 @@
       <li>ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
-    <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>
-    <minifiedDef>MinifiedFurniture</minifiedDef>
-    <tradeTags>
-      <li>Furniture</li>
-    </tradeTags>
   </ThingDef>
 
 </Defs>

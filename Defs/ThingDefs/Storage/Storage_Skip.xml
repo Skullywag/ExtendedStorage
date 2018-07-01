@@ -4,7 +4,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="FurnitureBase">
     <defName>Storage_Skip</defName>
     <label>Skip</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -19,7 +19,6 @@
     <statBases>
       <MaxHitPoints>250</MaxHitPoints>
       <WorkToBuild>780</WorkToBuild>
-      <Flammability>1.0</Flammability>
       <Beauty>-2</Beauty>
       <ES_StorageFactor>12</ES_StorageFactor>        
     </statBases>
@@ -32,7 +31,6 @@
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
-    <filthLeaving>BuildingRubble</filthLeaving>
     <building>
       <fixedStorageSettings>
         <priority>Important</priority>
@@ -54,10 +52,6 @@
     <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>
-    <minifiedDef>MinifiedFurniture</minifiedDef>
-    <tradeTags>
-      <li>Furniture</li>
-    </tradeTags>
   </ThingDef>
 
 </Defs>

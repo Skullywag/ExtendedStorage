@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ExtendedStorage.ESdef ParentName="BuildingBase">
+  <ExtendedStorage.ESdef ParentName="FurnitureBase">
     <defName>Freezer_Chest</defName>
     <label>Freezer chest</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
@@ -34,7 +34,6 @@
     <killedLeavings>
       <ChunkSlagSteel>1</ChunkSlagSteel>
     </killedLeavings>
-    <filthLeaving>BuildingRubble</filthLeaving>
     <building>
       <preventDeterioration>true</preventDeterioration>
       <fixedStorageSettings>
@@ -44,7 +43,7 @@
             <li>FoodRaw</li>
           </categories>
           <thingDefs>
-            <li>HerbalMedicine</li>
+            <li>MedicineHerbal</li>
           </thingDefs>
         </filter>
       </fixedStorageSettings>
@@ -53,7 +52,6 @@
       <li>ITab_Storage</li>
     </inspectorTabs>
     <tickerType>Normal</tickerType>
-    <designationCategory>Furniture</designationCategory>
     <staticSunShadowHeight>0.5</staticSunShadowHeight>
     <surfaceType>Item</surfaceType>
     <comps>
@@ -74,10 +72,6 @@
       <li>MicroelectronicsBasics</li>
       <li>AirConditioning</li>
     </researchPrerequisites>
-    <minifiedDef>MinifiedFurniture</minifiedDef>
-    <tradeTags>
-      <li>Furniture</li>
-    </tradeTags>
   </ExtendedStorage.ESdef>
 
 </Buildings>

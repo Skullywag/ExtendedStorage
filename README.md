@@ -1,4 +1,4 @@
-[![RimWorld Beta 18](https://img.shields.io/badge/RimWorld-Beta%2018-brightgreen.svg)](http://rimworldgame.com/)
+[![RimWorld 1.0 unstable](https://img.shields.io/badge/RimWorld-1.0%20unstable-yellow.svg)](http://rimworldgame.com/)
 
 # Extended Storage
 

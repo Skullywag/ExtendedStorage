@@ -383,7 +383,8 @@ namespace ExtendedStorage
             if (StoredThingDef == null)
                 return;
 
-            List<Thing> nonLimitStacks = StoredThings.Where(t => t.stackCount != t.def.stackLimit).ToList();
+            var nonLimitStacks = StoredThings.Where(t => t.stackCount != t.def.stackLimit).ToList();
+            
 
             // don't need to chunkify anything if we just have one single undersize stack
             if ((nonLimitStacks.Count == 1) && (nonLimitStacks[0].stackCount < StoredThingDef.stackLimit))
@@ -392,38 +393,37 @@ namespace ExtendedStorage
             int total = nonLimitStacks.Sum(t => t.stackCount);
             float healthFactor = (float) nonLimitStacks.Sum(t => t.stackCount*t.HitPoints)/(total*StoredThingDef.BaseMaxHitPoints);
 
-            using (IEnumerator<Thing> e = nonLimitStacks.GetEnumerator())
+            // distribute the non-full stacks - take from the top, try merging to the bottom
+
+            int idxDonor = nonLimitStacks.Count - 1;
+            int idxRecipient = 0;
+            while (idxDonor > idxRecipient)
             {
-                int count = 0;
-                Thing current = null;
-                while (true)
+                var donor = nonLimitStacks[idxDonor];
+                var recipient = nonLimitStacks[idxRecipient];
+
+                if (!recipient.TryAbsorbStack(donor, true))
                 {
-                    if (!e.MoveNext())
-                        break;
-
-                    current = e.Current;
-
-                    count += current.stackCount;
-
-                    while (count >= StoredThingDef.stackLimit)
-                    {
-                        Thing t = ThingMaker.MakeThing(StoredThingDef, current.Stuff);
-                        t.stackCount = StoredThingDef.stackLimit;
-                        t.HitPoints = (int) (StoredThingDef.BaseMaxHitPoints*healthFactor);
-                        GenSpawn.Spawn(t, OutputSlot, Map);
-                        count -= StoredThingDef.stackLimit;
-                    }
+                    idxRecipient++;
                 }
-                if (count > 0)
+                else
                 {
-                    Thing t = ThingMaker.MakeThing(StoredThingDef, current.Stuff);
-                    t.stackCount = count;
-                    t.HitPoints = (int) (StoredThingDef.BaseMaxHitPoints*healthFactor);
-                    GenSpawn.Spawn(t, OutputSlot, Map);
+                    idxDonor--;
                 }
             }
-            foreach (Thing thing in nonLimitStacks.Where(t => !t.Destroyed))
-                thing.Destroy(DestroyMode.Vanish);
+
+            if (idxDonor == idxRecipient)
+            {
+                // 'overflow' case 
+                var donor = nonLimitStacks[idxDonor];
+                while (nonLimitStacks[idxDonor].stackCount > StoredThingDef.stackLimit)
+                {
+                    var splitoff = donor.SplitOff(Math.Min(StoredThingDef.stackLimit, donor.stackCount - StoredThingDef.stackLimit));
+                    splitoff.Position = donor.Position;
+                    splitoff.SpawnSetup(donor.Map, false);
+                    outputSlot.GetSlotGroup(Map)?.parent?.Notify_ReceivedThing(splitoff);
+                }
+            }
         }
 
         /// <summary>
@@ -499,25 +499,15 @@ namespace ExtendedStorage
             if (((outputDef == null) && settings.filter.Allows(input)) || (input.def == outputDef))
             {
                 // think about building as ThingOwner - can contents still be accessed then?
-
                 int spaceRamaining = Math.Min(input.stackCount, ApparentMaxStorage - StoredThingTotal);
 
                 if (spaceRamaining > 0)
                 {
-                    Thing moved;
-                    if (spaceRamaining >= input.stackCount)
-                    {
-                        moved = input;
-                        input.Position = outputSlot;
-                    }
-                    else
-                    {
-                        moved = input.SplitOff(spaceRamaining);
-                        moved.HitPoints = input.HitPoints;
-                        GenSpawn.Spawn(moved, outputSlot, Map);
-                    }
-                    outputSlot.GetSlotGroup(Map)?.parent?.Notify_ReceivedThing(moved);
+                    Thing moved = input.SplitOff(spaceRamaining);
+                    moved.Position = outputSlot;
+                    moved.SpawnSetup(Map, false);
                     StoredThingDef = moved.def;
+                    outputSlot.GetSlotGroup(Map)?.parent?.Notify_ReceivedThing(moved);
                 }
             }
         }

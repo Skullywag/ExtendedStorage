@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Harmony;
-using RimWorld;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
-namespace ExtendedStorage
+namespace ExtendedStorage.Patches
 {
     [HarmonyPatch(typeof(RimWorld.ITab_Storage), "FillTab")]
-    public class ITab_Storage_FillTab
+    [UsedImplicitly]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    internal class ITab_Storage_FillTab
     {
 
         public static bool showStoreSettings = false;

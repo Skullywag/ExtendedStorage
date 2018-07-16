@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using ExtendedStorage.Patches;
+using RimWorld;
 using Verse;
 
 namespace ExtendedStorage

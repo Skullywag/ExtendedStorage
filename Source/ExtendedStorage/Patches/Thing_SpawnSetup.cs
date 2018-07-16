@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Emit;
 using Harmony;
+using JetBrains.Annotations;
 using Verse;
 
-namespace ExtendedStorage
+namespace ExtendedStorage.Patches
 {
     [HarmonyPatch(typeof(Thing), nameof(Thing.SpawnSetup))]
+    [UsedImplicitly]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class Thing_SpawnSetup
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

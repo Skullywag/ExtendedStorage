@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ExtendedStorage.Patches;
 using RimWorld;
 using UnityEngine;
 using Verse;

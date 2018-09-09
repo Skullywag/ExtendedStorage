@@ -12,7 +12,7 @@ namespace ExtendedStorage
             try {
                 HarmonyInstance instance = HarmonyInstance.Create("com.extendedstorage.patches");
                 instance.PatchAll(Assembly.GetExecutingAssembly());
-                Log.Message($"Extended Storage :: Harmony patches successful");
+                Log.Message($"Extended Storage {typeof(ExtendedStorageMod).Assembly.GetName().Version} - Harmony patches successful");
             } catch (Exception ex) {
                 Log.Error("Extended Storage :: Caught exception: " + ex);
             }

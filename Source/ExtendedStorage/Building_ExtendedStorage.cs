@@ -469,6 +469,10 @@ namespace ExtendedStorage
 
                         Thing thing = thingEnumerator.Current;
 
+                        // skip things with quality to avoid issues with moved/split of stacks
+                        if (thing.TryGetComp<CompQuality>() != null)
+                            continue;
+
                         while (!thing.DestroyedOrNull() && (forceSplurge || (thing.stackCount > thing.def.stackLimit)))
                         {
                             IntVec3 availableCell;

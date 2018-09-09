@@ -74,6 +74,8 @@
       <DependentUpon>LanguageKeys.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="Patches\CompressibilityDeciderUtility_IsSaveCompressible.cs" />
+    <Compile Include="Patches\GenSpawn_Spawn.cs" />
+    <Compile Include="Patches\Map_FinalizeLoading.cs" />
     <Compile Include="Patches\StorageSettings.cs" />
     <Compile Include="Patches\Thing_SplitOff.cs" />
     <Compile Include="Patches\[GUI]\FloatMenuMakerMap_AddHumanlikeOrders.cs" />

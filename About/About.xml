@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Extended Storage</name>
-	<author>Skullywag, Fluffy, spdskatr, DoctorVanGogh</author>
-	<targetVersion>1.0.1950</targetVersion>
-	<description>Adds additional storage buildings that multi stack items. Auto sort by Fluffy, Harmony by spdskatr</description>
+	<name>Extended Storage</name>	
+	<targetVersion>0.19.2009</targetVersion>
+	<author>(see description)</author>
+	<description xml:whitespace="preserve">Adds additional storage buildings that multi stack items. Auto sort by Fluffy, Harmony by spdskatr
+
+Authors: Skullywag, Fluffy, spdskatr, DoctorVanGogh
+</description>
 </ModMetaData>

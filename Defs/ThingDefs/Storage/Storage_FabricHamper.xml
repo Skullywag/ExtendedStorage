@@ -18,7 +18,7 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <Beauty>4</Beauty>
-      <ES_StorageFactor>5.33</ES_StorageFactor>      
+      <ES_StorageFactor>6</ES_StorageFactor>      
     </statBases>
     <description>Haulers carry textiles here for storage.</description>
     <size>(2,1)</size>

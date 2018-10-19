@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
 	<name>Extended Storage</name>	
-	<targetVersion>0.19.2009</targetVersion>
+	<targetVersion>1.0.2059</targetVersion>
 	<author>(see description)</author>
 	<description xml:whitespace="preserve">Adds additional storage buildings that multi stack items. Auto sort by Fluffy, Harmony by spdskatr
 

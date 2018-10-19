@@ -17,7 +17,7 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <Beauty>-2</Beauty>
-      <ES_StorageFactor>2.5</ES_StorageFactor>        
+      <ES_StorageFactor>3</ES_StorageFactor>        
     </statBases>
     <description>Haulers carry radioactive materials here for storage.</description>
     <size>(2,1)</size>

@@ -46,7 +46,7 @@
     <castEdgeShadows>true</castEdgeShadows>
     <statBases>
       <Beauty>8</Beauty>
-      <ES_StorageFactor>6.67</ES_StorageFactor>
+      <ES_StorageFactor>7</ES_StorageFactor>
     </statBases>
     <description>Haulers carry raw food and plant matter here for storage.</description>
     <size>(2,1)</size>

@@ -1,6 +1,6 @@
 # Extended Storage
 
-[![RimWorld B19](https://img.shields.io/badge/RimWorld-B19-green.svg?style=popout-square)](http://rimworldgame.com/)
+[![RimWorld 1.0](https://img.shields.io/badge/RimWorld-B19-green.svg?style=popout-square)](http://rimworldgame.com/)
 
 Adds additional storage buildings that multi stack items.
 

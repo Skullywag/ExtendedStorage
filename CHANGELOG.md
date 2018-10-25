@@ -1,3 +1,15 @@
+# Version 3.4.1.1
+
+Fix for clothing rack right click menu issue
+
+# Version 3.4.1
+
+1.0 release
+
+# Version 3.4.0
+
+B19 release
+
 # Version 3.3.0
 
 Experimental 1.0 version

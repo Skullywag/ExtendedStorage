@@ -46,28 +46,26 @@ namespace ExtendedStorage.Patches
         {
             // original code taken from FloatMenuMakerMap_AddHumanlikeOrders
             if (!pawn.CanReach(apparel, PathEndMode.ClosestTouch, Danger.Deadly, false, TraverseMode.ByPawn))
-                return new FloatMenuOption("CannotWear".Translate(apparel.Label) + " (" + "NoPath".Translate() + ")", null, MenuOptionPriority.Default, null, null, 0f, null, null);
-            if (!ApparelUtility.HasPartsToWear(pawn, apparel.def))
-                return new FloatMenuOption("CannotWear".Translate(apparel.Label) + " (" + "CannotWearBecauseOfMissingBodyParts".Translate() + ")", null, MenuOptionPriority.Default, null, null, 0f,
-                                           null, null);
-            return FloatMenuUtility.DecoratePrioritizedTask(
-                new FloatMenuOption(
-                    "ForceWear".Translate(apparel.LabelShort),
-                    () =>
-                    {
-                        apparel.SetForbidden(false, true);
-                        Job job = new Job(JobDefOf.Wear, apparel);
-                        pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
-                    },
-                    MenuOptionPriority.High,
-                    null,
-                    null,
-                    0f,
-                    null,
-                    null),
-                pawn,
-                apparel,
-                "ReservedBy");
+            {
+                return new FloatMenuOption("CannotWear".Translate(apparel.Label, apparel) + " (" + "NoPath".Translate() + ")", null, MenuOptionPriority.Default, null, null, 0f, null, null);
+            }
+            else if (apparel.IsBurning())
+            {
+                return new FloatMenuOption("CannotWear".Translate(apparel.Label, apparel) + " (" + "BurningLower".Translate() + ")", null, MenuOptionPriority.Default, null, null, 0f, null, null);
+            }
+            else if (!ApparelUtility.HasPartsToWear(pawn, apparel.def))
+            {
+                return new FloatMenuOption("CannotWear".Translate(apparel.Label, apparel) + " (" + "CannotWearBecauseOfMissingBodyParts".Translate() + ")", null, MenuOptionPriority.Default, null, null, 0f, null, null);
+            }
+            else
+            {
+                return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("ForceWear".Translate(apparel.LabelShort, apparel), delegate
+                                                                                                                                         {
+                                                                                                                                             apparel.SetForbidden(false, true);
+                                                                                                                                             Job job = new Job(JobDefOf.Wear, apparel);
+                                                                                                                                             pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
+                                                                                                                                         }, MenuOptionPriority.High, null, null, 0f, null, null), pawn, apparel, "ReservedBy");
+            }
         }
     }
 }

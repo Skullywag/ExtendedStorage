@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_Basket</defName>
+		<label>Food Basket</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/Basket/Basket</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(4,3)</drawSize>
+		</graphicData>
+		<statBases>
+			<Beauty>8</Beauty>
+			<ES_StorageFactor>7</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry raw food and plant matter here for storage.</description>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Woody</li>
+		</stuffCategories>
+		<costStuffCount>15</costStuffCount>
+		<building>
+			<preventDeteriorationOnTop>true</preventDeteriorationOnTop>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>FoodRaw</li>
+						<li>PlantMatter</li>
+						<li>Drugs</li>
+					</categories>
+					<thingDefs>
+						<li>MedicineHerbal</li>
+						<li>Pemmican</li>
+						<li>Kibble</li>
+					</thingDefs>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+		<staticSunShadowHeight Inherit="False">0.33</staticSunShadowHeight>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_FabricHamper</defName>
+		<label>Fabric Hamper</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/FabricHamper/FabricHamper</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(4,2)</drawSize>
+			<shaderType>CutoutComplex</shaderType>
+		</graphicData>
+		<statBases>
+			<Beauty>4</Beauty>
+			<ES_StorageFactor>6</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry textiles here for storage.</description>
+		<stuffCategories>
+			<li>Leathery</li>
+			<li>Fabric</li>
+		</stuffCategories>
+		<costStuffCount>45</costStuffCount>
+		<building>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>Textiles</li>
+					</categories>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_HazMatContainer</defName>
+		<label>HazMat Container</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/HazMat/HazMat</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(4,3)</drawSize>
+		</graphicData>
+		<statBases>
+			<Beauty>-2</Beauty>
+			<ES_StorageFactor>3</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry radioactive materials here for storage.</description>
+		<stuffCategories>
+			<li>Metallic</li>
+		</stuffCategories>
+		<costStuffCount>30</costStuffCount>
+		<building>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<thingDefs>
+						<li>Uranium</li>
+					</thingDefs>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_Locker</defName>
+		<label>Clothing Rack</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/ClothingRack/ClothingRack</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(3,2)</drawSize>
+		</graphicData>
+		<statBases>
+			<MaxHitPoints>150</MaxHitPoints>
+			<Beauty>1</Beauty>
+			<ES_StorageFactor>10</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry apparel here for storage.</description>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Woody</li>
+		</stuffCategories>
+		<costStuffCount>45</costStuffCount>
+		<building>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>Apparel</li>
+					</categories>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_MedicineCabinet</defName>
+		<label>Medicine Cabinet</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/MedCab/MedCab</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(3,2)</drawSize>
+			<shaderType>CutoutComplex</shaderType>
+		</graphicData>
+		<statBases>
+			<Beauty>5</Beauty>
+			<ES_StorageFactor>4</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry medicine and drugs here for storage.</description>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Woody</li>
+		</stuffCategories>
+		<costStuffCount>45</costStuffCount>
+		<building>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>Medicine</li>
+						<li>Drugs</li>
+					</categories>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_Skip</defName>
+		<label>Skip</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/Skip/Skip</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(3,2)</drawSize>
+		</graphicData>
+		<statBases>
+			<MaxHitPoints>250</MaxHitPoints>
+			<WorkToBuild>780</WorkToBuild>
+			<Beauty>-2</Beauty>
+			<ES_StorageFactor>12</ES_StorageFactor>
+		</statBases>
+		<stuffCategories>
+			<li>Metallic</li>
+		</stuffCategories>
+		<costStuffCount>90</costStuffCount>
+		<description>Haulers carry materials here for storage. Holds more than a pallet but not as neatly.</description>
+		<building>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>ResourcesRaw</li>
+						<li>StoneChunks</li>
+					</categories>
+					<thingDefs>
+						<li>ChunkSlagSteel</li>
+					</thingDefs>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_TrayRack</defName>
+		<label>Tray rack</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/TrayRack/TrayRack</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(4,3)</drawSize>
+		</graphicData>
+		<statBases>
+			<Beauty>7</Beauty>
+			<ES_StorageFactor>10</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry meals and treats here for storage.</description>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Woody</li>
+		</stuffCategories>
+		<costStuffCount>45</costStuffCount>
+		<building>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>FoodMeals</li>
+					</categories>
+					<thingDefs>
+						<li>Chocolate</li>
+					</thingDefs>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+	</ThingDef>
+
+	<!--============================== Storage ===========================-->
+
+	<ThingDef ParentName="ExtendedStorage_FurnitureBase">
+		<defName>Storage_WoodenPallet</defName>
+		<label>Pallet</label>
+		<graphicData>
+			<texPath>Things/Building/Furniture/Pallet/Pallet</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(4,3)</drawSize>
+		</graphicData>
+		<statBases>
+			<MaxHitPoints>150</MaxHitPoints>
+			<WorkToBuild>780</WorkToBuild>
+			<Beauty>-2</Beauty>
+			<ES_StorageFactor>8</ES_StorageFactor>
+		</statBases>
+		<description>Haulers carry materials here for storage.</description>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Woody</li>
+		</stuffCategories>
+		<costStuffCount>75</costStuffCount>
+		<building>
+			<preventDeteriorationOnTop>true</preventDeteriorationOnTop>
+			<fixedStorageSettings>
+				<priority>Important</priority>
+				<filter>
+					<categories>
+						<li>ResourcesRaw</li>
+						<li>Manufactured</li>
+						<li>PlantMatter</li>
+						<li>Drugs</li>
+						<li>MortarShells</li>
+					</categories>
+					<thingDefs>
+						<li>Hay</li>
+					</thingDefs>
+				</filter>
+			</fixedStorageSettings>
+		</building>
+		<staticSunShadowHeight Inherit="False">0.25</staticSunShadowHeight>
+	</ThingDef>
+
+</Defs>

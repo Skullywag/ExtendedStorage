@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <ThingDef Name="BuildingBase" Abstract="True">
+  <ThingDef Name="ESBuildingBase" Abstract="True">
     <category>Building</category>
     <thingClass>Building</thingClass>
     <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
@@ -14,7 +14,7 @@
     <drawGUIOverlay>true</drawGUIOverlay>
   </ThingDef>
 
-  <ThingDef Name="FurnitureBase" ParentName="BuildingBase" Abstract="True">
+  <ThingDef Name="ESFurnitureBase" ParentName="ESBuildingBase" Abstract="True">
     <designationCategory>Furniture</designationCategory>
     <minifiedDef>MinifiedThing</minifiedDef>
     <statBases>
@@ -32,7 +32,7 @@
   </ThingDef>
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="FurnitureBase">
+  <ThingDef ParentName="ESFurnitureBase">
     <defName>Storage_Basket</defName>
     <label>Food Basket</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>

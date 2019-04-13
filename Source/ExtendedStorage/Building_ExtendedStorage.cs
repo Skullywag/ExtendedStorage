@@ -18,7 +18,7 @@ namespace ExtendedStorage
 
 
 
-    public class Building_ExtendedStorage : Building_Storage, IUserSettingsOwner {
+    public class Building_ExtendedStorage : Building_Storage, IUserSettingsOwner, IHoldMultipleThings.IHoldMultipleThings {
         #region fields
 
         internal Graphic _gfxStoredThing;
@@ -600,5 +600,20 @@ namespace ExtendedStorage
                 _gfxStoredThing = null;
             }
         }
+
+        #region ImplementIHoldMultipleThings //PickUpandHaulCompatibility
+        public bool CapacityAt(ThingDef thingDef, IntVec3 storeCell, Map map, out int capacity)
+        {
+            if (StoredThingTotal == 0)
+                capacity = (int)(def.stackLimit * this.GetStatValue(DefReferences.Stat_ES_StorageFactor));
+            else
+                capacity = ApparentMaxStorage - StoredThingTotal;
+
+            return capacity > 0;
+        }
+
+        public bool StackableAt(ThingDef def, IntVec3 storeCell, Map map)
+            => true;
+        #endregion
     }
 }

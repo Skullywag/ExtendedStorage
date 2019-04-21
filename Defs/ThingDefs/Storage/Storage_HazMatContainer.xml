@@ -3,7 +3,7 @@
 
   <!--============================== Storage ===========================-->
 
-  <ThingDef ParentName="FurnitureBase">
+  <ThingDef ParentName="ESFurnitureBase">
     <defName>Storage_HazMatContainer</defName>
     <label>HazMat Container</label>
     <thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>

@@ -12,7 +12,7 @@
                 
           Currently not referenced outside this file      
       -->
-    <RimworldDataDir>$(RimworldInstallDir)\RimWorldWin_Data\</RimworldDataDir>
+    <RimworldDataDir>$(RimworldInstallDir)\RimWorldWin64_Data\</RimworldDataDir>
 
     <!-- 
           Default would be "$(RimworldDataDir)\Managed\" (no quotes) 

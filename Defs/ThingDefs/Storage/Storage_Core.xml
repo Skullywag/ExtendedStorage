@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!-- Core Def -->
+	<ThingDef Name="ExtendedStorage_FurnitureBase" ParentName="BuildingBase" Abstract="True">
+		<designationCategory>FurnitureStorage</designationCategory>
+		<thingClass>ExtendedStorage.Building_ExtendedStorage</thingClass>
+		<minifiedDef>MinifiedThing</minifiedDef>
+		<statBases>
+			<Mass>20</Mass>
+			<MaxHitPoints>100</MaxHitPoints>
+			<WorkToBuild>580</WorkToBuild>
+			<Flammability>1.0</Flammability>
+		</statBases>
+		<thingCategories>
+			<li>BuildingsFurnitureStorage</li>
+		</thingCategories>
+		<tradeTags>
+			<li>Furniture</li>
+		</tradeTags>
+		<size>(2,1)</size>
+		<passability>PassThroughOnly</passability>
+		<altitudeLayer>Building</altitudeLayer>
+		<staticSunShadowHeight>0.5</staticSunShadowHeight>
+		<castEdgeShadows>true</castEdgeShadows>
+		<surfaceType>Item</surfaceType>
+		<tickerType>Normal</tickerType>
+		<drawGUIOverlay>True</drawGUIOverlay>
+		<inspectorTabs>
+			<li>ExtendedStorage.ITab_Storage</li>
+		</inspectorTabs>
+	</ThingDef>
+
+</Defs>

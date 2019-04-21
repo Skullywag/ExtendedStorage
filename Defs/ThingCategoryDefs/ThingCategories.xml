@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ThingCategoryDef>
+		<defName>BuildingsFurnitureStorage</defName>
+		<label>storage</label>
+		<parent>BuildingsFurniture</parent>
+	</ThingCategoryDef>
+</Defs>

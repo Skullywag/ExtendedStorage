@@ -41,7 +41,7 @@ namespace ExtendedStorage
 
         public bool AtCapacity => StoredThingTotal >= ApparentMaxStorage;
 
-        public int ApparentMaxStorage => StoredThingDef == null 
+        public int ApparentMaxStorage => StoredThingDef == null
             ? Int32.MaxValue
             : (int) (StoredThingDef.stackLimit*this.GetStatValue(DefReferences.Stat_ES_StorageFactor));
 
@@ -115,7 +115,7 @@ namespace ExtendedStorage
         public override void Draw()
         {
             base.Draw();
-            if (true == StoredThingDef?.IsApparel)
+            if ((true == StoredThingDef?.IsApparel) || (true == StoredThingDef?.IsWeapon) || (true == StoredThingDef?.IsCorpse))
                 return;
 
             _gfxStoredThing?.DrawFromDef(
@@ -137,10 +137,10 @@ namespace ExtendedStorage
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            // we can't extend the results of base.GetGizmos() because we are replacing the 
-            // copy/paste buttons for filter settings. Main problem then is that we also need 
+            // we can't extend the results of base.GetGizmos() because we are replacing the
+            // copy/paste buttons for filter settings. Main problem then is that we also need
             // to re-add any comp gizmos, the minifiable (re-)install gizmo and the copy gizmo.
-            // So instead, let's get hacky and try to call the grandparents' implementation of 
+            // So instead, let's get hacky and try to call the grandparents' implementation of
             // GetGizmos.
 
             if (Building_GetGizmos == null)
@@ -237,7 +237,7 @@ namespace ExtendedStorage
             return GenLabel.ThingLabel(this, 1, false);
         }
 
-        public override IEnumerable<StatDrawEntry> SpecialDisplayStats() {            
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats() {
             foreach (StatDrawEntry specialDisplayStat in base.SpecialDisplayStats())
             {
                 yield return specialDisplayStat;
@@ -251,10 +251,10 @@ namespace ExtendedStorage
             yield return new StatDrawEntry(
                                 DefReferences.StatCategory_ExtendedStorage,
                                 LanguageKeys.keyed.ExtendedStorage_UsageStat.Translate(),
-                                StoredThingDef != null 
+                                StoredThingDef != null
                                 ? LanguageKeys.keyed.ExtendedStorage_UsageStat_Value.Translate(StoredThingTotal, ApparentMaxStorage)
                                 : LanguageKeys.keyed.ExtendedStorage_NA.Translate(),
-                                -2);            
+                                -2);
         }
 
 
@@ -298,9 +298,9 @@ namespace ExtendedStorage
         public void Notify_UserSettingsChanged()
         {
 
-            // the vanilla StorageSettings.TryNotifyChanged will alert the SlotGroupManager that 
+            // the vanilla StorageSettings.TryNotifyChanged will alert the SlotGroupManager that
             // storage settings have changed. We don't need this behaviour for user settings, as these
-            // don't directly influence the slotgroup, and any changes we make are propagated to the 
+            // don't directly influence the slotgroup, and any changes we make are propagated to the
             // 'real' storage settings, which will still notify the SlotGroupManager on change.
 
             // check if priority changed, update if needed
@@ -324,13 +324,13 @@ namespace ExtendedStorage
         }
 
         /// <summary>
-        /// Checks if the storedDef has a mapMesh painting - if so, invalidate the apppropriate SectionLayer (needed for 
+        /// Checks if the storedDef has a mapMesh painting - if so, invalidate the apppropriate SectionLayer (needed for
         /// chunks to appear immediately while game is paused &amp; exclusion by filter)
         /// </summary>
         private void InvalidateThingSection(ThingDef storedDef)
         {
             switch (storedDef?.drawerType)
-            {  
+            {
                 case DrawerType.MapMeshOnly:
                 case DrawerType.MapMeshAndRealTime:
                     Map?.mapDrawer.SectionAt(OutputSlot).RegenerateLayers(MapMeshFlag.Things);
@@ -385,7 +385,7 @@ namespace ExtendedStorage
                 return;
 
             var nonLimitStacks = StoredThings.Where(t => t.stackCount != t.def.stackLimit).ToList();
-            
+
 
             // don't need to chunkify anything if we just have one single undersize stack
             if ((nonLimitStacks.Count == 1) && (nonLimitStacks[0].stackCount < StoredThingDef.stackLimit))
@@ -415,7 +415,7 @@ namespace ExtendedStorage
 
             if (idxDonor == idxRecipient)
             {
-                // 'overflow' case 
+                // 'overflow' case
                 var donor = nonLimitStacks[idxDonor];
                 while (nonLimitStacks[idxDonor].stackCount > StoredThingDef.stackLimit)
                 {
@@ -583,11 +583,11 @@ namespace ExtendedStorage
                     _label = string.Format(LanguageKeys.keyed.ExtendedStorage_TotalCount.Translate(), total);
                 }
 
-                if (!StoredThingDef.IsApparel)
+                if ((!StoredThingDef.IsApparel) || (!StoredThingDef.IsWeapon) || (!StoredThingDef.IsCorpse))
                 {
                     _gfxStoredThing = (StoredThingDef.graphic as Graphic_StackCount)
-                                          ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)
-                                      ?? StoredThingDef.graphic;
+                                        ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)
+                                        ?? StoredThingDef.graphic;
                 }
                 else
                 {

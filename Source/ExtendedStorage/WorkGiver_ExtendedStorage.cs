@@ -50,7 +50,7 @@ namespace ExtendedStorage
             // get other containers in our room
             var targets = thing.Map.listerBuildings
                 .AllBuildingsColonistOfClass<Building_ExtendedStorage>()
-                .Where( target => target.GetRoom() == room && target != source );
+                .Where( target => target.GetRoom() == room && target != source && !target.AtCapacity );
 
             // go over cells in order of current stored, return first that is a valid target
             foreach ( var target in targets.OrderByDescending( target => target.StoredThingTotal ) )

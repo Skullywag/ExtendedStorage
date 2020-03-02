@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<!-- Thing category -->
+	<!-- Manually update vanilla objects -->
+	<Operation Class="PatchOperationSequence">
+		<success>Always</success>
+		<operations>
+			<li Class="PatchOperationTest">
+				<xpath>Defs/ThingDef[defName="Shelf"]/thingCategories</xpath>
+				<success>Invert</success>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Shelf"]</xpath>
+				<value>
+					<thingCategories Inherit="False" />
+				</value>
+			</li>
+		</operations>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Shelf"]/thingCategories</xpath>
+		<value>
+			<thingCategories  Inherit="False">
+				<li>BuildingsFurnitureStorage</li>
+			</thingCategories>
+		</value>
+	</Operation>
+</Patch>

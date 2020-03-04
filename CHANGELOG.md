@@ -1,3 +1,8 @@
+# Version 3.5.0
+
+1.1 release
+some tweaks by Terragg: updated preview image, fluffy's mod manager support, correct display of weapons & corpses in storage
+
 # Version 3.4.1.1
 
 Fix for clothing rack right click menu issue

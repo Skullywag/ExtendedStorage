@@ -4,7 +4,7 @@
 	<author>(see description)</author>
 	<description xml:whitespace="preserve">Adds additional storage buildings that multi stack items. Auto sort by Fluffy, Harmony by spdskatr
 
-Authors: Skullywag, Fluffy, spdskatr, DoctorVanGogh
+Authors: Skullywag, Fluffy, spdskatr, DoctorVanGogh, Terragg
 </description>
     <packageId>Skullywag.ExtendedStorage</packageId>   
   <supportedVersions>

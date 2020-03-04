@@ -115,7 +115,7 @@ namespace ExtendedStorage
         public override void Draw()
         {
             base.Draw();
-            if ((true == StoredThingDef?.IsApparel) || (true == StoredThingDef?.IsWeapon) || (true == StoredThingDef?.IsCorpse))
+            if (StoredThingDef?.MultiStorableDef() == true)
                 return;
 
             _gfxStoredThing?.DrawFromDef(
@@ -583,7 +583,7 @@ namespace ExtendedStorage
                     _label = string.Format(LanguageKeys.keyed.ExtendedStorage_TotalCount.Translate(), total);
                 }
 
-                if ((!StoredThingDef.IsApparel) || (!StoredThingDef.IsWeapon) || (!StoredThingDef.IsCorpse))
+                if (!StoredThingDef.MultiStorableDef())
                 {
                     _gfxStoredThing = (StoredThingDef.graphic as Graphic_StackCount)
                                         ?.SubGraphicForStackCount(Math.Min(total, StoredThingDef.stackLimit), StoredThingDef)

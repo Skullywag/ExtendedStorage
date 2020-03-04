@@ -1,25 +1,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <!-- 
-          Default "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\" (no quotes) 
-
-          Currently not referenced outside this file
-      -->
-    <RimworldInstallDir>E:\Spiele\SteamApps\SteamApps\common\Rimworld\</RimworldInstallDir>
-
-    <!-- 
-          If you're developing on a non windows machine, change to correct path 
-                
-          Currently not referenced outside this file      
-      -->
-    <RimworldDataDir>$(RimworldInstallDir)\RimWorldWin64_Data\</RimworldDataDir>
-
-    <!-- 
-          Default would be "$(RimworldDataDir)\Managed\" (no quotes) 
-        
-          If you want to use relative paths, ideally start with "$(SolutionDir)\"
-      -->
-    <RimworldManagedDir>$(RimworldDataDir)\Managed\</RimworldManagedDir>
+    <RimworldManagedDir10>$(SolutionDir)\..\..\Lib\1.0\RimWorldWin64_Data\Managed\</RimworldManagedDir10>
+    <RimworldManagedDir11>$(SolutionDir)\..\..\Lib\1.1\RimWorldWin64_Data\Managed\</RimworldManagedDir11>
   </PropertyGroup>
 
   <!-- TODO: maybe later introduce auto path selection based on OS (Condition - see stackoverflow.com/questions/43499222) -->

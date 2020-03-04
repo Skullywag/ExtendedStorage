@@ -2,6 +2,6 @@
 <Manifest>
 	<identifier>Extended Storage</identifier>
 	<version>3.4.1.1</version>
-	<manifestUri>https://raw.githubusercontent.com/DoctorVanGogh/ExtendedStorage/master/About/Manifest.xml</manifestUri>
-	<downloadUri>https://github.com/DoctorVanGogh/ExtendedStorage/releases/latest</downloadUri>
+	<manifestUri>https://raw.githubusercontent.com/Skullywag/ExtendedStorage/master/About/Manifest.xml</manifestUri>
+	<downloadUri>https://github.com/Skullywag/ExtendedStorage/releases/latest</downloadUri>
 </Manifest>

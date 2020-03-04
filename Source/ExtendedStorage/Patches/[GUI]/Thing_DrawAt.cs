@@ -13,8 +13,7 @@ namespace ExtendedStorage.Patches
     {
         public static bool Prefix(Thing __instance, Vector3 drawLoc, bool flip)
         {
-            return __instance.def.IsApparel || __instance.def.IsCorpse || __instance.def.IsWeapon ||
-                   !(StorageUtility.GetStoringBuilding(__instance)?.OutputSlot == __instance.Position);
+            return __instance.def.MultiStorableDef() || !(StorageUtility.GetStoringBuilding(__instance)?.OutputSlot == __instance.Position);
         }
     }
 

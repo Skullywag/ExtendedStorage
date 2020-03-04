@@ -49,5 +49,15 @@ namespace ExtendedStorage
 
             return GenSpawn.Spawn(createdThing, targetLocation, map);
         }
+
+        /// <summary>
+        /// Checks if a <see cref="def"/> can have multiple items stored in a storage building
+        /// </summary>
+        /// <param name="def">Def to check</param>
+        /// <remarks>Currently there are only ever weapons, apparel or corpse multi storers.</remarks>
+        public static bool MultiStorableDef(this ThingDef def)
+        {
+            return def.IsApparel || def.IsCorpse || def.IsWeapon;
+        }
     }
 }

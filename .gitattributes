@@ -48,5 +48,6 @@
 Source/ export-ignore
 *.psd export-ignore
 Textures/Things/Building/Furniture/MedCab/trays.png export-ignore
+Textures/Things/Building/Furniture/*.psd export-ignore
 *.CodeAnalysisLog.xml export-ignore
 *.lastcodeanalysissucceeded export-ignore

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Harmony;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
@@ -7,7 +7,6 @@ using Verse;
 namespace ExtendedStorage.Patches {
 
     [HarmonyPatch(typeof(CompressibilityDeciderUtility), nameof(CompressibilityDeciderUtility.IsSaveCompressible))]
-    [UsedImplicitly]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class CompressibilityDeciderUtility_IsSaveCompressible {
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Harmony;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
@@ -11,7 +11,6 @@ using Verse.AI;
 namespace ExtendedStorage.Patches
 {
     [HarmonyPatch(typeof(FloatMenuMakerMap), "AddHumanlikeOrders")]
-    [UsedImplicitly]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class FloatMenuMakerMap_AddHumanlikeOrders
     {

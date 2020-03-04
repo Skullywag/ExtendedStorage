@@ -162,7 +162,7 @@ namespace ExtendedStorage
                                    defaultDesc = LanguageKeys.keyed.ExtendedStorage_Rename.Translate(this.def.label),
                                    defaultLabel = "Rename".Translate(),
                                    activateSound = SoundDef.Named("Click"),
-                                   action = delegate { Find.WindowStack.Add(new Dialog_Rename(this)); },
+                                   action = delegate { Find.WindowStack.Add(new ES_Dialog_Rename(this)); },
                                    groupKey = 942608684                 // guaranteed to be random - https://xkcd.com/221/
             };
             yield return a;
@@ -247,6 +247,7 @@ namespace ExtendedStorage
                                 DefReferences.StatCategory_ExtendedStorage,
                                 LanguageKeys.keyed.ExtendedStorage_CurrentlyStoringStat.Translate(),
                                 StoredThingDef?.LabelCap ?? LanguageKeys.keyed.ExtendedStorage_Nothing.Translate(),
+                                StoredThingDef?.DescriptionDetailed,
                                 -1);
             yield return new StatDrawEntry(
                                 DefReferences.StatCategory_ExtendedStorage,
@@ -254,6 +255,7 @@ namespace ExtendedStorage
                                 StoredThingDef != null
                                 ? LanguageKeys.keyed.ExtendedStorage_UsageStat_Value.Translate(StoredThingTotal, ApparentMaxStorage)
                                 : LanguageKeys.keyed.ExtendedStorage_NA.Translate(),
+                                null,
                                 -2);
         }
 
